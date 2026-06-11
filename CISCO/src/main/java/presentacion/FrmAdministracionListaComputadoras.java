@@ -6,14 +6,14 @@ package presentacion;
 
 /**
  *
- * @author USUARIO
+ * @author hp
  */
-public class FrmAdministracionBloqueados extends javax.swing.JFrame {
+public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
 
     /**
-     * Creates new form FrmAdministracionBloqueados
+     * Creates new form FrmAdministracionListaComputadoras
      */
-    public FrmAdministracionBloqueados() {
+    public FrmAdministracionListaComputadoras() {
         initComponents();
     }
 
@@ -34,9 +34,9 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
         LblTituloTabla = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TlbBloqueados = new javax.swing.JTable();
-        btnBloquear = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         TxtBuscador = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         btnSiguinte = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
         btnListas = new javax.swing.JButton();
@@ -71,28 +71,20 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(227, 224, 218));
 
         LblTituloTabla.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
-        LblTituloTabla.setText("Alumnos Bloqueados ");
+        LblTituloTabla.setText("Lista de computadoras");
 
         TlbBloqueados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID alumno", "Nombre", "Fecha bloqueo", "Motivo", "Accion"
+                "Numero Computadora", "Direccion IP", "Estado", "Acciones de apartado"
             }
         ));
         jScrollPane1.setViewportView(TlbBloqueados);
-
-        btnBloquear.setBackground(new java.awt.Color(153, 0, 0));
-        btnBloquear.setText("Bloquear Alumno");
-        btnBloquear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBloquearActionPerformed(evt);
-            }
-        });
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -101,12 +93,14 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             }
         });
 
-        TxtBuscador.setText("Buscar Alumno...");
+        TxtBuscador.setText("Buscar...");
         TxtBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TxtBuscadorActionPerformed(evt);
             }
         });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laboratorio", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -115,16 +109,16 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(LblTituloTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1028, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 14, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,9 +126,9 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(LblTituloTabla)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnBloquear)
                         .addComponent(btnBuscar)
-                        .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                 .addContainerGap())
@@ -170,7 +164,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnBloquados)
                 .addGap(40, 40, 40)
@@ -191,7 +185,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSiguinte))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 44, Short.MAX_VALUE))
+                .addGap(0, 37, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,9 +237,13 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnApartadosActionPerformed
 
-    private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBloquearActionPerformed
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtBuscadorActionPerformed
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
         // TODO add your handling code here:
@@ -258,14 +256,6 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnListasActionPerformed
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TxtBuscadorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,20 +274,20 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmAdministracionBloqueados().setVisible(true);
+                new FrmAdministracionListaComputadoras().setVisible(true);
             }
         });
     }
@@ -310,11 +300,11 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     private javax.swing.JButton btnApartados;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBloquados;
-    private javax.swing.JButton btnBloquear;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnListas;
     private javax.swing.JButton btnSiguinte;
     private javax.swing.JButton btnUso;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
