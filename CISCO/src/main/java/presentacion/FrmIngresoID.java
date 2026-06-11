@@ -54,7 +54,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
         LblTitulo2.setForeground(new java.awt.Color(0, 0, 0));
         LblTitulo2.setText("Ingresar ID:");
 
-        btnCancelar.setBackground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setBackground(new java.awt.Color(153, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(0, 0, 0));
         btnCancelar.setText("Cancelar apartado");
@@ -64,7 +64,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
             }
         });
 
-        btnIngresar.setBackground(new java.awt.Color(255, 255, 255));
+        btnIngresar.setBackground(new java.awt.Color(0, 102, 102));
         btnIngresar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnIngresar.setForeground(new java.awt.Color(0, 0, 0));
         btnIngresar.setText("Ingresar");

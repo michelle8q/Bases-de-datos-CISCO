@@ -26,21 +26,169 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PnlFonfo = new javax.swing.JPanel();
+        LblTitulo = new javax.swing.JLabel();
+        btnAtras = new javax.swing.JButton();
+        btnSiguinte = new javax.swing.JButton();
+        PnlEquipos = new javax.swing.JPanel();
+        BtnEquipo6 = new javax.swing.JButton();
+        BtnEquipo1 = new javax.swing.JButton();
+        BtnEquipo5 = new javax.swing.JButton();
+        BtnEquipo7 = new javax.swing.JButton();
+        BtnEquipo2 = new javax.swing.JButton();
+        BtnEquipo3 = new javax.swing.JButton();
+        BtnEquipo4 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        PnlFonfo.setBackground(new java.awt.Color(227, 224, 218));
+        PnlFonfo.setPreferredSize(new java.awt.Dimension(1130, 609));
+
+        LblTitulo.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
+        LblTitulo.setForeground(new java.awt.Color(0, 0, 0));
+        LblTitulo.setText("Seleccione un equipo disponible");
+
+        btnAtras.setBackground(new java.awt.Color(255, 255, 255));
+        btnAtras.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAtras.setForeground(new java.awt.Color(0, 0, 0));
+        btnAtras.setText("atras");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
+
+        btnSiguinte.setBackground(new java.awt.Color(255, 255, 255));
+        btnSiguinte.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnSiguinte.setForeground(new java.awt.Color(0, 0, 0));
+        btnSiguinte.setText("siguiente");
+        btnSiguinte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguinteActionPerformed(evt);
+            }
+        });
+
+        PnlEquipos.setBackground(new java.awt.Color(227, 224, 218));
+
+        BtnEquipo6.setText("jButton1");
+
+        BtnEquipo1.setText("btn");
+
+        BtnEquipo5.setText("jButton1");
+
+        BtnEquipo7.setText("jButton1");
+
+        BtnEquipo2.setText("jButton1");
+
+        BtnEquipo3.setText("jButton1");
+
+        BtnEquipo4.setText("jButton1");
+
+        jButton8.setText("jButton1");
+
+        javax.swing.GroupLayout PnlEquiposLayout = new javax.swing.GroupLayout(PnlEquipos);
+        PnlEquipos.setLayout(PnlEquiposLayout);
+        PnlEquiposLayout.setHorizontalGroup(
+            PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PnlEquiposLayout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(BtnEquipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
+                .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnEquipo2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(57, 57, 57)
+                .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnEquipo3, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo7, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55)
+                .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo4, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(226, Short.MAX_VALUE))
+            .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(PnlEquiposLayout.createSequentialGroup()
+                    .addGap(71, 71, 71)
+                    .addComponent(BtnEquipo5, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(760, Short.MAX_VALUE)))
+        );
+        PnlEquiposLayout.setVerticalGroup(
+            PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlEquiposLayout.createSequentialGroup()
+                .addGap(65, 65, 65)
+                .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnEquipo2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnEquipo6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnEquipo7, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(56, 56, 56))
+            .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlEquiposLayout.createSequentialGroup()
+                    .addContainerGap(248, Short.MAX_VALUE)
+                    .addComponent(BtnEquipo5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(57, 57, 57)))
+        );
+
+        javax.swing.GroupLayout PnlFonfoLayout = new javax.swing.GroupLayout(PnlFonfo);
+        PnlFonfo.setLayout(PnlFonfoLayout);
+        PnlFonfoLayout.setHorizontalGroup(
+            PnlFonfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PnlFonfoLayout.createSequentialGroup()
+                .addGap(104, 104, 104)
+                .addComponent(btnAtras)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSiguinte)
+                .addGap(107, 107, 107))
+            .addGroup(PnlFonfoLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(LblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlFonfoLayout.createSequentialGroup()
+                .addContainerGap(84, Short.MAX_VALUE)
+                .addComponent(PnlEquipos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
+        PnlFonfoLayout.setVerticalGroup(
+            PnlFonfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PnlFonfoLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(LblTitulo)
+                .addGap(30, 30, 30)
+                .addComponent(PnlEquipos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(PnlFonfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAtras)
+                    .addComponent(btnSiguinte))
+                .addGap(39, 39, 39))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(PnlFonfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(PnlFonfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSiguinteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +226,18 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnEquipo1;
+    private javax.swing.JButton BtnEquipo2;
+    private javax.swing.JButton BtnEquipo3;
+    private javax.swing.JButton BtnEquipo4;
+    private javax.swing.JButton BtnEquipo5;
+    private javax.swing.JButton BtnEquipo6;
+    private javax.swing.JButton BtnEquipo7;
+    private javax.swing.JLabel LblTitulo;
+    private javax.swing.JPanel PnlEquipos;
+    private javax.swing.JPanel PnlFonfo;
+    private javax.swing.JButton btnAtras;
+    private javax.swing.JButton btnSiguinte;
+    private javax.swing.JButton jButton8;
     // End of variables declaration//GEN-END:variables
 }
