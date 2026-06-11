@@ -45,7 +45,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
 
         LblTitulo.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
         LblTitulo.setForeground(new java.awt.Color(0, 0, 0));
-        LblTitulo.setText("Seleccione un equipo disponible");
+        LblTitulo.setText("Ingrese su ID para apartar un equipo");
 
         LblMensajeValidacion.setFont(new java.awt.Font("Corbel", 0, 24)); // NOI18N
         LblMensajeValidacion.setForeground(new java.awt.Color(0, 0, 0));
@@ -81,9 +81,6 @@ public class FrmIngresoID extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(LblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(212, 212, 212)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(LblMensajeValidacion, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -95,7 +92,10 @@ public class FrmIngresoID extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(LblTitulo2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(TxtId, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(TxtId, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(LblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(524, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
