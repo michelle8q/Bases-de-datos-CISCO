@@ -14,19 +14,20 @@ public class AlumnoEntidad {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String contrasena;
-    private String estado;
+    private Boolean esInscrito;
     private CarreraEntidad carrera;
 
     public AlumnoEntidad() {
     }
 
-    public AlumnoEntidad(int id, String nombres, String apellidoPaterno, String apellidoMaterno, String contrasena, String estado, CarreraEntidad carrera) {
+    public AlumnoEntidad(int id, String nombres, String apellidoPaterno, String apellidoMaterno, 
+            String contrasena, Boolean esInscrito, CarreraEntidad carrera) {
         this.id = id;
         this.nombres = nombres;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.contrasena = contrasena;
-        this.estado = estado;
+        this.esInscrito = esInscrito;
         this.carrera = carrera;
     }
 
@@ -70,14 +71,15 @@ public class AlumnoEntidad {
         this.contrasena = contraseña;
     }
 
-    public String getEstado() {
-        return estado;
+    public Boolean getEsInscrito() {
+        return esInscrito;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEsInscrito(Boolean esInscrito) {
+        this.esInscrito = esInscrito;
     }
 
+  
     public CarreraEntidad getCarrera() {
         return carrera;
     }
