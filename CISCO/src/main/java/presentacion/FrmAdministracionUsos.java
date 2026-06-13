@@ -4,17 +4,39 @@
  */
 package presentacion;
 
+import entidad.UsoEntidad;
+import negocio.IUsoNegocio;
+import negocio.NegocioException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author hp
  */
 public class FrmAdministracionUsos extends javax.swing.JFrame {
 
+    private IUsoNegocio conexionNegocio;
+    private Timer temporizadorActualizacion;
+
+    private int paginaActual = 1;
+    private final int LIMITE_POR_PAGINA = 5;
+
     /**
      * Creates new form FrmAdministracionUsos
      */
-    public FrmAdministracionUsos() {
+    public FrmAdministracionUsos(IUsoNegocio conexionNegocio) {
         initComponents();
+        this.conexionNegocio = conexionNegocio;
+        cargarTablaUsosActivos();
+        iniciarActualizacionAutomatica();
     }
 
     /**
@@ -231,6 +253,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
@@ -247,50 +270,81 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
         // TODO add your handling code here:
+        paginaActual++;
+        cargarTablaUsosActivos();
     }//GEN-LAST:event_btnSiguinteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+        if (paginaActual > 1) {
+            cargarTablaUsosActivos();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnListasActionPerformed
 
+    private void iniciarActualizacionAutomatica() {
+        int intervalo = 30000;
+
+        temporizadorActualizacion = new Timer(intervalo, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarTablaUsosActivos();
+            }
+        });
+
+        temporizadorActualizacion.start();
+    }
+
+    private void cargarTablaUsosActivos() {
+        int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
+
+        try {
+            List<UsoEntidad> listaUsos = conexionNegocio.listarUsosActivos(LIMITE_POR_PAGINA, offset);
+
+            DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
+
+            modeloTabla.setRowCount(0);
+
+            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            for (UsoEntidad usoActual : listaUsos) {
+
+                String nombreCompleto = usoActual.getAlumno().getNombres() + " "
+                        + usoActual.getAlumno().getApellidoPaterno();
+
+                String tiempoTranscurrido = "0 min";
+                if (usoActual.getFechaHoraInicio() != null) {
+                    long minutosDeUso = Duration.between(usoActual.getFechaHoraInicio(), LocalDateTime.now()).toMinutes();
+                    tiempoTranscurrido = minutosDeUso + " min";
+                }
+
+                // Formateo de la hora de inicio a un texto 
+                String horaDeInicio = (usoActual.getFechaHoraInicio() != null)
+                        ? usoActual.getFechaHoraInicio().format(formatoFechaHora)
+                        : "Sin iniciar";
+
+                Object[] filaNueva = {
+                    usoActual.getEquipo().getId(), // Columna 1: Numero Computadora
+                    usoActual.getAlumno().getId(), // Columna 2: ID alumno
+                    nombreCompleto, // Columna 3: Nombre alumno
+                    horaDeInicio, // Columna 4: Hora Inicio
+                    tiempoTranscurrido // Columna 5: Tiempo de uso
+                };
+
+                modeloTabla.addRow(filaNueva);
+            }
+
+        } catch (NegocioException excepcionNegocio) {
+            JOptionPane.showMessageDialog(this, excepcionNegocio.getMessage(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionUsos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionUsos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionUsos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionUsos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmAdministracionUsos().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblTitulo;

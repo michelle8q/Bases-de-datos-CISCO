@@ -4,13 +4,17 @@
  */
 package dto;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author cinca
  */
 public class BloquearAlumnoDTO {
+
     private int idAlumno;
     private String motivo;
+    private LocalDateTime fechaHoraFin;
 
     public BloquearAlumnoDTO() {
     }
@@ -18,6 +22,8 @@ public class BloquearAlumnoDTO {
     public BloquearAlumnoDTO(int idAlumno, String motivo) {
         this.idAlumno = idAlumno;
         this.motivo = motivo;
+        this.fechaHoraFin = fechaHoraFin;
+
     }
 
     public int getIdAlumno() {
@@ -35,6 +41,12 @@ public class BloquearAlumnoDTO {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
-    
-    
+
+    public LocalDateTime getFechaHoraFin() {
+        return fechaHoraFin;
+    }
+
+    public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
+    }
 }
