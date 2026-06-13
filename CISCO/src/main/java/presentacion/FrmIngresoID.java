@@ -4,18 +4,29 @@
  */
 package presentacion;
 
+import entidad.AlumnoEntidad;
+import javax.swing.JOptionPane;
+import negocio.IAlumnoNegocio;
+import negocio.NegocioException;
+
 /**
  *
  * @author cinca
  */
 public class FrmIngresoID extends javax.swing.JFrame {
+    private IAlumnoNegocio alumnoNegocio;
 
     /**
      * Creates new form FrmSeleccionEquipo
      */
-    public FrmIngresoID() {
+    public FrmIngresoID(IAlumnoNegocio alumnoNegocio) {
         initComponents();
+        this.alumnoNegocio = alumnoNegocio;
     }
+
+    public FrmIngresoID() {
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,7 +41,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         LblTitulo = new javax.swing.JLabel();
         LblMensajeValidacion = new javax.swing.JLabel();
-        TxtId = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
         LblTitulo2 = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
@@ -92,7 +103,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(LblTitulo2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(TxtId, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(LblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -105,7 +116,7 @@ public class FrmIngresoID extends javax.swing.JFrame {
                 .addComponent(LblTitulo)
                 .addGap(79, 79, 79)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TxtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(LblTitulo2))
                 .addGap(45, 45, 45)
                 .addComponent(LblMensajeValidacion)
@@ -136,8 +147,45 @@ public class FrmIngresoID extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
+        try {
+            validarIngresoId();
+            
+            int id = Integer.parseInt(txtId.getText());
+            
+            AlumnoEntidad alumno = alumnoNegocio.buscarPorId(id);
+            
+            FrmSeleccionEquipo pantalla = new FrmSeleccionEquipo(); //Tal vez despues necesite recibir el alumno
+            pantalla.setVisible(true);
+            
+        } catch (PresentacionException ex){
+             JOptionPane.showMessageDialog(this, ex.getMessage());
+     
+        } catch (NegocioException ex){
+             JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_btnIngresarActionPerformed
-
+    
+    private void validarCampo(String valor) throws PresentacionException {  
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new PresentacionException("El id no puede ser nulo.");
+        }
+    }
+    
+    private void validarNumero(String valor) throws PresentacionException {
+        if(!valor.matches("\\d+")){
+            JOptionPane.showMessageDialog(this, "Formato inválido de id, solo puede tener números.");
+            return;
+        }
+    }
+    
+    private void validarIngresoId() throws PresentacionException {
+        
+        String valor = txtId.getText();
+        validarCampo(valor);
+        validarNumero(valor);
+    }
+    
+        
     /**
      * @param args the command line arguments
      */
@@ -178,10 +226,10 @@ public class FrmIngresoID extends javax.swing.JFrame {
     private javax.swing.JLabel LblMensajeValidacion;
     private javax.swing.JLabel LblTitulo;
     private javax.swing.JLabel LblTitulo2;
-    private javax.swing.JTextField TxtId;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }

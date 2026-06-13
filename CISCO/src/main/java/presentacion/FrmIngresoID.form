@@ -71,7 +71,7 @@
                                   <Group type="102" attributes="0">
                                       <Component id="LblTitulo2" min="-2" pref="144" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="TxtId" min="-2" pref="244" max="-2" attributes="0"/>
+                                      <Component id="txtId" min="-2" pref="244" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -92,7 +92,7 @@
                   <Component id="LblTitulo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="TxtId" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtId" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="LblTitulo2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
@@ -129,7 +129,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="TxtId">
+        <Component class="javax.swing.JTextField" name="txtId">
         </Component>
         <Component class="javax.swing.JLabel" name="LblTitulo2">
           <Properties>

@@ -4,6 +4,11 @@
 
 package itson.org.cisco;
 
+import persistencia.AlumnoDAO;
+import persistencia.ConexionBD;
+import persistencia.IAlumnoDAO;
+import persistencia.IConexionBD;
+
 /**
  *
  * @author cinca
@@ -11,6 +16,16 @@ package itson.org.cisco;
 public class CISCO {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        try {
+            IConexionBD conexion = new ConexionBD();
+            IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
+            
+            alumnoDAO.buscarAlumnoPorId(1);
+            if(alumnoDAO != null) {
+               System.out.println("se encontro");
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
