@@ -3,13 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package negocio;
-import entidad.UsoEntidad;
+
+import dto.UsoDTO;
+import dto.ApartadoDTO;
 import java.util.List;
+
 /**
  *
  * @author luisf
  */
 public interface IUsoNegocio {
-    List<UsoEntidad> listarUsosActivos(int limite, int offset) throws NegocioException;
-    List<UsoEntidad> listarApartadosDelDia() throws NegocioException;
+
+    List<UsoDTO> listarUsosActivos(int limite, int offset) throws NegocioException;
+
+    List<ApartadoDTO> listarApartadosDelDia(int limite, int offset) throws NegocioException;
+
 }

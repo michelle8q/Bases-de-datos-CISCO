@@ -43,12 +43,12 @@ public class UsoDAO implements IUsoDAO {
                                    WHERE Usos.fechaHoraInicio IS NOT NULL AND Usos.fechaHoraFin IS NULL
                                    LIMIT ? OFFSET ?;
                                   """;
-            
+
             PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL);
-            
+
             sentenciaPreparada.setInt(1, limite);
             sentenciaPreparada.setInt(2, offset);
-            
+
             ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
 
             while (resultadosConsulta.next()) {
@@ -65,22 +65,27 @@ public class UsoDAO implements IUsoDAO {
     }
 
     @Override
-    public List<UsoEntidad> listarApartadosDelDia() throws PersistenciaException {
+    public List<UsoEntidad> listarApartadosDelDia(int limite, int offset) throws PersistenciaException {
         List<UsoEntidad> listaDeUsos = new ArrayList<>();
 
         try (Connection conexionAbierta = this.conexionBaseDatos.crearConexion()) {
 
             String sentenciaSQL = """
-                                   SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
-                                          Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
-                                          Equipos.id AS idDelEquipo, Equipos.direccionIP 
-                                   FROM Usos 
-                                   INNER JOIN Alumnos ON Usos.idAlumno = Alumnos.id 
-                                   INNER JOIN Equipos ON Usos.idEquipo = Equipos.id 
-                                   WHERE DATE(Usos.fechaHoraApartado) = CURDATE();
-                                  """;
+                               SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
+                                      Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
+                                      Equipos.id AS idDelEquipo, Equipos.direccionIP 
+                               FROM Usos 
+                               INNER JOIN Alumnos ON Usos.idAlumno = Alumnos.id 
+                               INNER JOIN Equipos ON Usos.idEquipo = Equipos.id 
+                               WHERE DATE(Usos.fechaHoraApartado) = CURDATE()
+                               LIMIT ? OFFSET ?;
+                              """;
 
             PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL);
+
+            sentenciaPreparada.setInt(1, limite);
+            sentenciaPreparada.setInt(2, offset);
+
             ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
 
             while (resultadosConsulta.next()) {
@@ -96,7 +101,6 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
-  
     private UsoEntidad mapearEntidadUso(ResultSet resultadosConsulta) throws SQLException {
 
         AlumnoEntidad alumnoAsignado = new AlumnoEntidad();
@@ -105,10 +109,8 @@ public class UsoDAO implements IUsoDAO {
         alumnoAsignado.setApellidoPaterno(resultadosConsulta.getString("apellidoPaterno"));
         alumnoAsignado.setApellidoMaterno(resultadosConsulta.getString("apellidoMaterno"));
 
-
         EquipoEntidad equipoAsignado = new EquipoEntidad();
         equipoAsignado.setId(resultadosConsulta.getInt("idDelEquipo"));
-
 
         Timestamp tiempoDeApartado = resultadosConsulta.getTimestamp("fechaHoraApartado");
         Timestamp tiempoDeInicio = resultadosConsulta.getTimestamp("fechaHoraInicio");

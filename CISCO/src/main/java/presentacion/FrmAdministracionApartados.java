@@ -4,17 +4,38 @@
  */
 package presentacion;
 
+import negocio.IUsoNegocio;
+import negocio.NegocioException;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import java.time.format.DateTimeFormatter;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author hp
  */
 public class FrmAdministracionApartados extends javax.swing.JFrame {
 
+    private IUsoNegocio conexionNegocio;
+    private Timer temporizadorActualizacion;
+
+    private int paginaActual = 1;
+    private final int LIMITE_POR_PAGINA = 5;
+
     /**
      * Creates new form FrmAdministracionApartados
      */
-    public FrmAdministracionApartados() {
+    public FrmAdministracionApartados(IUsoNegocio conexionNegocio) {
         initComponents();
+
+        this.conexionNegocio = conexionNegocio;
+
+        cargarTablaApartadosDelDia();
+        iniciarActualizacionAutomatica();
     }
 
     /**
@@ -33,7 +54,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         LblTituloTabla = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        TlbBloqueados = new javax.swing.JTable();
+        TlbApartados = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
         TxtBuscador = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -73,7 +94,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
         LblTituloTabla.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
         LblTituloTabla.setText("Apartados del dia");
 
-        TlbBloqueados.setModel(new javax.swing.table.DefaultTableModel(
+        TlbApartados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -84,7 +105,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
                 "Numero Computadora", "ID alumno", "Nombre alumno", "Hora Inicio", "Hora fin", "Estado"
             }
         ));
-        jScrollPane1.setViewportView(TlbBloqueados);
+        jScrollPane1.setViewportView(TlbApartados);
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -247,55 +268,77 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
         // TODO add your handling code here:
+        paginaActual++;
+        cargarTablaApartadosDelDia();
+
     }//GEN-LAST:event_btnSiguinteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+        if (paginaActual > 1) {
+            paginaActual--;
+            cargarTablaApartadosDelDia();
+        }
+
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnListasActionPerformed
+    private void cargarTablaApartadosDelDia() {
+        int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        DefaultTableModel modeloTabla = (DefaultTableModel) TlbApartados.getModel();
+        modeloTabla.setRowCount(0);
+
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionApartados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionApartados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionApartados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionApartados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+            List<dto.ApartadoDTO> listaApartados = conexionNegocio.listarApartadosDelDia(LIMITE_POR_PAGINA, offset);
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmAdministracionApartados().setVisible(true);
+            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
+
+            for (dto.ApartadoDTO apartado : listaApartados) {
+
+                String horaInicioStr = (apartado.getHoraInicio() != null)
+                        ? apartado.getHoraInicio().format(formatoHora) : "Sin iniciar";
+
+                String horaFinStr = (apartado.getHoraFin() != null)
+                        ? apartado.getHoraFin().format(formatoHora) : "--:--";
+
+                Object[] filaNueva = {
+                    apartado.getIdEquipo(),
+                    apartado.getIdAlumno(),
+                    apartado.getNombreCompletoAlumno(),
+                    horaInicioStr,
+                    horaFinStr,
+                    apartado.getEstado()
+                };
+
+                modeloTabla.addRow(filaNueva);
+            }
+        } catch (NegocioException e) {
+            System.out.println("Aviso: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void iniciarActualizacionAutomatica() {
+        int intervalo = 30000;
+
+        temporizadorActualizacion = new Timer(intervalo, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarTablaApartadosDelDia();
             }
         });
+
+        temporizadorActualizacion.start();
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblTitulo;
     private javax.swing.JLabel LblTituloTabla;
-    private javax.swing.JTable TlbBloqueados;
+    private javax.swing.JTable TlbApartados;
     private javax.swing.JTextField TxtBuscador;
     private javax.swing.JButton btnApartados;
     private javax.swing.JButton btnAtras;

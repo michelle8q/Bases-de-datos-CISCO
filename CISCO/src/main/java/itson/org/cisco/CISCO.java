@@ -11,6 +11,7 @@ import persistencia.IAlumnoDAO;
 import persistencia.IConexionBD;
 import persistencia.IUsoDAO;
 import persistencia.UsoDAO;
+import presentacion.FrmAdministracionApartados;
 import presentacion.FrmAdministracionUsos;
 
 /**
@@ -21,13 +22,13 @@ public class CISCO {
 
     public static void main(String[] args) {
 
-        IConexionBD conexionBD = new ConexionBD(); 
+        IConexionBD conexionBD = new ConexionBD();
 
         IUsoDAO usoDAO = new UsoDAO(conexionBD);
 
         IUsoNegocio usoNegocio = new UsoNegocio(usoDAO);
 
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(usoNegocio);
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados(usoNegocio);
 
         ventana.setVisible(true);
     }

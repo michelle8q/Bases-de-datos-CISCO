@@ -15,5 +15,5 @@ public interface IUsoDAO {
 
     List<UsoEntidad> listarUsosActivos(int limite, int offset) throws PersistenciaException;
 
-    List<UsoEntidad> listarApartadosDelDia() throws PersistenciaException;
+    List<UsoEntidad> listarApartadosDelDia(int limite, int offset) throws PersistenciaException;
 }

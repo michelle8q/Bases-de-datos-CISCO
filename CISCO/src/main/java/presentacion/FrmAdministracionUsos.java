@@ -302,7 +302,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
         int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
 
         try {
-            List<UsoEntidad> listaUsos = conexionNegocio.listarUsosActivos(LIMITE_POR_PAGINA, offset);
+            List<dto.UsoDTO> listaUsos = conexionNegocio.listarUsosActivos(LIMITE_POR_PAGINA, offset);
 
             DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
 
@@ -310,10 +310,9 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
             DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-            for (UsoEntidad usoActual : listaUsos) {
+            for (dto.UsoDTO usoActual : listaUsos) {
 
-                String nombreCompleto = usoActual.getAlumno().getNombres() + " "
-                        + usoActual.getAlumno().getApellidoPaterno();
+                String nombreCompleto = usoActual.getNombreCompletoAlumno();
 
                 String tiempoTranscurrido = "0 min";
                 if (usoActual.getFechaHoraInicio() != null) {
@@ -327,8 +326,8 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
                         : "Sin iniciar";
 
                 Object[] filaNueva = {
-                    usoActual.getEquipo().getId(), // Columna 1: Numero Computadora
-                    usoActual.getAlumno().getId(), // Columna 2: ID alumno
+                    usoActual.getIdEquipo(), // Columna 1: Numero Computadora
+                    usoActual.getIdAlumno(), // Columna 2: ID alumno
                     nombreCompleto, // Columna 3: Nombre alumno
                     horaDeInicio, // Columna 4: Hora Inicio
                     tiempoTranscurrido // Columna 5: Tiempo de uso
