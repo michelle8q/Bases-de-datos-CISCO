@@ -13,7 +13,9 @@ import java.util.List;
  * @author cinca
  */
 public interface IBloqueoDAO {
-    BloqueoEntidad bloquearAlumno(BloquearAlumnoDTO bloqueo);
+    BloqueoEntidad bloquearAlumno(BloquearAlumnoDTO bloqueo) throws PersistenciaException;
+    BloqueoEntidad buscarPorId(int id) throws PersistenciaException;
     BloqueoEntidad desbloquearAlumno(int id);
     List<BloqueoEntidad> listarBloqueos();
+    boolean BloqueoExistenteAlumno(int idAlumno)  throws PersistenciaException;
 }
