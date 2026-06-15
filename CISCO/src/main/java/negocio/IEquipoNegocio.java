@@ -1,16 +1,18 @@
-
 package negocio;
 
 import dto.EstadoEquipoDTO;
 import dto.ListarEquipoDTO;
+import dto.SoftwareDTO;
 import java.util.List;
+
 /**
  *
  * @author piña luis
  */
 public interface IEquipoNegocio {
-    
+
     EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException;
+
     List<ListarEquipoDTO> buscarEquiposPaginados(String nombreLaboratorio, String filtro, int limite, int pagina) throws Exception;
 
     int obtenerTotalPaginas(String nombreLaboratorio, String filtro, int limite) throws Exception;
@@ -19,6 +21,6 @@ public interface IEquipoNegocio {
 
     List<String> obtenerNombresLaboratorios() throws Exception;
 
-    
+    List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception;
 
 }

@@ -1,7 +1,9 @@
 package negocio;
 
 import dto.ListarEquipoDTO;
+import dto.SoftwareDTO;
 import entidad.EquipoEntidad;
+import entidad.SoftwareEntidad;
 import java.util.ArrayList;
 import java.util.List;
 import persistencia.IEquipoDAO;
@@ -10,7 +12,7 @@ import persistencia.IEquipoDAO;
  *
  * @author piña luis
  */
-public class EquipoNegocio implements IEquipoNegocio{
+public class EquipoNegocio implements IEquipoNegocio {
 
     private IEquipoDAO equipoDAO;
 
@@ -64,13 +66,42 @@ public class EquipoNegocio implements IEquipoNegocio{
             throw new Exception("Error al procesar el cambio de estado: " + e.getMessage());
         }
     }
-    
+
     @Override
     public List<String> obtenerNombresLaboratorios() throws Exception {
         try {
             return equipoDAO.obtenerNombresLaboratorios();
         } catch (Exception e) {
             throw new Exception("Error al cargar la lista de laboratorios: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception {
+        try {
+            return equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
+        } catch (Exception e) {
+            throw new Exception("Error al obtener los softwares del equipo: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception {
+        try {
+            List<SoftwareEntidad> entidades = equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
+
+            List<SoftwareDTO> dtos = new ArrayList<>();
+            for (SoftwareEntidad entidad : entidades) {
+                SoftwareDTO dto = new SoftwareDTO();
+                dto.setId(entidad.getId());
+                dto.setNombre(entidad.getNombre());
+                dtos.add(dto);
+            }
+
+            return dtos;
+
+        } catch (Exception e) {
+            throw new Exception("Error al obtener los softwares del equipo: " + e.getMessage());
         }
     }
 }

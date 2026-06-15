@@ -1,6 +1,7 @@
 package persistencia;
 
 import entidad.EquipoEntidad;
+import entidad.SoftwareEntidad;
 import java.util.List;
 
 /**
@@ -22,7 +23,8 @@ public interface IEquipoDAO {
     public int contarEquipos(String nombreLaboratorio, String filtro) throws PersistenciaException;
 
     public void actualizarEstado(int idEquipo, String nuevoEstado) throws PersistenciaException;
-    
+
     public List<String> obtenerNombresLaboratorios() throws PersistenciaException;
 
+    public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException;
 }
