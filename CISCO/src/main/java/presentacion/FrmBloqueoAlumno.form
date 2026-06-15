@@ -124,14 +124,11 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="TxtId">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="id del alumno"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="TxtMotivo">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="motivo del bloqueo"/>
-          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TxtMotivoActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="BtnCancelar">
           <Properties>

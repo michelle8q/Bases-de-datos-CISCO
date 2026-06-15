@@ -4,17 +4,30 @@
  */
 package presentacion;
 
+import dto.BloquearAlumnoDTO;
+import entidad.BloqueoEntidad;
+import javax.swing.JOptionPane;
+import negocio.IBloqueoNegocio;
+import negocio.NegocioException;
+
 /**
  *
  * @author USUARIO
  */
 public class FrmBloqueoAlumno extends javax.swing.JFrame {
-
+     private IBloqueoNegocio bloqueoNegocio;
+     
     /**
      * Creates new form FrmBloqueoAlumno
      */
-    public FrmBloqueoAlumno() {
+    public FrmBloqueoAlumno(IBloqueoNegocio bloqueoNegocio) {
         initComponents();
+        this.bloqueoNegocio = bloqueoNegocio;
+        System.out.println("Negocio recibido: " + bloqueoNegocio);
+    }
+
+    public FrmBloqueoAlumno() {
+       initComponents();
     }
 
     /**
@@ -48,9 +61,11 @@ public class FrmBloqueoAlumno extends javax.swing.JFrame {
         LblID.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
         LblID.setText("Id Alumno:");
 
-        TxtId.setText("id del alumno");
-
-        TxtMotivo.setText("motivo del bloqueo");
+        TxtMotivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TxtMotivoActionPerformed(evt);
+            }
+        });
 
         BtnCancelar.setBackground(new java.awt.Color(153, 0, 0));
         BtnCancelar.setText("Cancelar");
@@ -130,47 +145,91 @@ public class FrmBloqueoAlumno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
-        // TODO add your handling code here:
+         this.dispose();
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBloquearActionPerformed
-        // TODO add your handling code here:
+        String motivo = TxtMotivo.getText().trim();
+        registrarBloqueo(motivo);
+    
     }//GEN-LAST:event_BtnBloquearActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    private void TxtMotivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtMotivoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtMotivoActionPerformed
+    
+    private void registrarBloqueo(String motivo) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmBloqueoAlumno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmBloqueoAlumno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmBloqueoAlumno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmBloqueoAlumno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            this.validacionesBloquearAlumno();
+            BloquearAlumnoDTO nuevoAlumno = this.crearObjetoBloqueoDTO();
+            
+            BloqueoEntidad alumnoBloqueado = this.bloqueoNegocio.bloquear(nuevoAlumno);
+            
+            JOptionPane.showMessageDialog(this, "El alumno ha sido bloqueado.");
+            
+            this.dispose();
+            
+        } catch (NegocioException ex) {
+             JOptionPane.showMessageDialog(this, ex.getMessage());
+             
+        } catch (PresentacionException ex) {
+              JOptionPane.showMessageDialog(this, ex.getMessage());
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmBloqueoAlumno().setVisible(true);
-            }
-        });
     }
+    
+     private BloquearAlumnoDTO crearObjetoBloqueoDTO() {
+        String idTexto= TxtId.getText().trim();
+        
+         try {      
+            validarCampo(idTexto, "el id es obligatorio");
+       
+        } catch (PresentacionException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+         
+        int idAlumno = Integer.parseInt(idTexto);
+        return new BloquearAlumnoDTO(
+                idAlumno, 
+                TxtMotivo.getText().trim()  
+            );
+    }
+     
+     private void validarLongitud(String valor, int longitudMaxima, String nombreCampo)
+            throws PresentacionException {
+
+        if (valor.length() > longitudMaxima) {
+            throw new PresentacionException(
+                    nombreCampo + " no puede exceder los " + longitudMaxima + " caracteres");
+        }
+    }
+    
+    private void validarCampo(String valor, String mensaje) throws PresentacionException {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new PresentacionException(mensaje);
+        } 
+    }
+    
+    private void validarIdNumerico(String valor) throws PresentacionException {
+        if(!valor.matches("\\d+")) {
+            throw new PresentacionException("El id debe contener solo numeros.");
+        }
+    }
+
+    private void validarLongitudes() throws PresentacionException {
+        validarLongitud(TxtMotivo.getText(), 150, "El motivo excede la longitud permitida");
+    }
+
+    private void validarCamposVacios() throws PresentacionException {
+        validarCampo(TxtId.getText(), "El id es obligatorio");
+        validarIdNumerico(TxtId.getText().trim());
+        validarCampo(TxtMotivo.getText(), "El motivo es obligatorio");
+    }
+
+    private void validacionesBloquearAlumno() throws PresentacionException {
+        this.validarCamposVacios();
+        this.validarLongitudes();
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBloquear;

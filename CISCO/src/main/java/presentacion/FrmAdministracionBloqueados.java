@@ -15,7 +15,6 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import negocio.IBloqueoNegocio;
 import negocio.NegocioException;
-import presentacion.PresentacionException;
 
 /**
  *
@@ -274,7 +273,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnApartadosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
-       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno();
+       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
        ventana.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
 

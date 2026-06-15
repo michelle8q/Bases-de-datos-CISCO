@@ -44,8 +44,8 @@ public class BloqueoDAO implements IBloqueoDAO {
 
         statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
         statement.setNull(2, java.sql.Types.TIMESTAMP);
-        statement.setString(4, bloqueo.getMotivo());
-        statement.setInt(3, bloqueo.getIdAlumno());
+        statement.setString(3, bloqueo.getMotivo());
+        statement.setInt(4, bloqueo.getIdAlumno());
         
         statement.executeUpdate();
         
@@ -64,7 +64,7 @@ public class BloqueoDAO implements IBloqueoDAO {
         }
     }
     
-     @Override
+    @Override
     public BloqueoEntidad buscarPorId(int id) throws PersistenciaException {
         try (Connection conexion = this.conexion.crearConexion()) {
                 String sentenciaSQL = """
@@ -77,18 +77,24 @@ public class BloqueoDAO implements IBloqueoDAO {
         ResultSet rs = statement.executeQuery();
         
         AlumnoEntidad alumno = alumnoDAO.buscarAlumnoPorId(id);
-        
+ 
         if(rs.next()) {
+            
+            LocalDateTime fechaHoraFin = null;
+
+            if(rs.getTimestamp("fechaHoraFin") != null) {
+                fechaHoraFin = rs.getTimestamp("fechaHoraFin").toLocalDateTime();
+            }
+
             return new BloqueoEntidad(
                 rs.getInt("id"), 
                 rs.getTimestamp("fechaHoraInicio").toLocalDateTime(),
-                rs.getTimestamp("fechaHoraFin").toLocalDateTime(),
+                fechaHoraFin,
                 rs.getString("motivo"),
-                rs.getInt("idAlumno")
-                
+                rs.getInt("idAlumno")    
             );
         }
-        
+
         return null;
         
         } catch (SQLException e) {
