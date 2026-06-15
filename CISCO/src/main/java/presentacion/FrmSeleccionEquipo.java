@@ -46,12 +46,9 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
         PnlFonfo.setPreferredSize(new java.awt.Dimension(1130, 609));
 
         LblTitulo.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
-        LblTitulo.setForeground(new java.awt.Color(0, 0, 0));
         LblTitulo.setText("Seleccione un equipo disponible");
 
-        btnAtras.setBackground(new java.awt.Color(255, 255, 255));
         btnAtras.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnAtras.setForeground(new java.awt.Color(0, 0, 0));
         btnAtras.setText("atras");
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,9 +56,7 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
             }
         });
 
-        btnSiguinte.setBackground(new java.awt.Color(255, 255, 255));
         btnSiguinte.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnSiguinte.setForeground(new java.awt.Color(0, 0, 0));
         btnSiguinte.setText("siguiente");
         btnSiguinte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,9 +87,9 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
         PnlEquiposLayout.setHorizontalGroup(
             PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PnlEquiposLayout.createSequentialGroup()
-                .addGap(66, 66, 66)
+                .addGap(72, 72, 72)
                 .addComponent(BtnEquipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
+                .addGap(49, 49, 49)
                 .addGroup(PnlEquiposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BtnEquipo2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnEquipo6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -161,7 +156,7 @@ public class FrmSeleccionEquipo extends javax.swing.JFrame {
                 .addComponent(LblTitulo)
                 .addGap(30, 30, 30)
                 .addComponent(PnlEquipos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(PnlFonfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAtras)
                     .addComponent(btnSiguinte))
