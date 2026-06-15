@@ -22,5 +22,7 @@ public interface IEquipoDAO {
     public int contarEquipos(String nombreLaboratorio, String filtro) throws PersistenciaException;
 
     public void actualizarEstado(int idEquipo, String nuevoEstado) throws PersistenciaException;
+    
+    public List<String> obtenerNombresLaboratorios() throws PersistenciaException;
 
 }
