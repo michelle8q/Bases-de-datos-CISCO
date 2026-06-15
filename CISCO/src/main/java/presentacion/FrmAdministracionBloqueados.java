@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import negocio.IBloqueoNegocio;
+import negocio.IEquipoNegocio;
+import negocio.IUsoNegocio;
 import negocio.NegocioException;
 
 /**
@@ -21,7 +23,10 @@ import negocio.NegocioException;
  * @author USUARIO
  */
 public class FrmAdministracionBloqueados extends javax.swing.JFrame {
-    
+   
+   
+    private IUsoNegocio usoNegocio;
+    private IEquipoNegocio apartadoNegocio;
     private IBloqueoNegocio bloqueoNegocio;
     private int paginaActual = 1;
     private Timer temporizadorActualizacion;
@@ -263,18 +268,21 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos();
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(usoNegocio, apartadoNegocio);
         ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
-        FrmAdministracionApartados ventana = new FrmAdministracionApartados();
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados(usoNegocio, apartadoNegocio);
         ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
        FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
        ventana.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_btnBloquearActionPerformed
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
