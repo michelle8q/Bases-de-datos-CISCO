@@ -3,6 +3,7 @@ package persistencia;
 import dto.EstadoEquipoDTO;
 import entidad.AlumnoEntidad;
 import entidad.EquipoEntidad;
+import entidad.SoftwareEntidad;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -262,5 +263,38 @@ public class EquipoDAO implements IEquipoDAO {
             throw new PersistenciaException("Error al consultar el estado del equipo por IP: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException {
+        List<SoftwareEntidad> lista = new ArrayList<>();
+
+        String sql = """
+                 SELECT s.id, s.nombre
+                 FROM Softwares s
+                 INNER JOIN EquipoSoftware es ON s.id = es.idSoftware
+                 WHERE es.idEquipo = ?
+                 ORDER BY s.nombre ASC
+                 """;
+
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idEquipo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SoftwareEntidad sw = new SoftwareEntidad();
+                    sw.setId(rs.getInt("id"));
+                    sw.setNombre(rs.getString("nombre"));
+                    lista.add(sw);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener softwares del equipo: " + e.getMessage());
+            throw new PersistenciaException("Error al obtener la lista de softwares del equipo.");
+        }
+
+        return lista;
     }
 }

@@ -4,17 +4,35 @@
  */
 package presentacion;
 
+import negocio.IEquipoNegocio;
+
+import dto.SoftwareDTO;
+import negocio.IEquipoNegocio;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  *
  * @author USUARIO
  */
 public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
 
+    private IEquipoNegocio equipoNegocio;
+    private int idEquipo;
+    private int numeroEquipo;
+    private List<SoftwareDTO> todosSoftwares;
+
     /**
      * Creates new form FrmListaSoftwaresEquipo
      */
-    public FrmListaSoftwaresEquipo() {
-        initComponents();
+    public FrmListaSoftwaresEquipo(IEquipoNegocio equipoNegocio,
+            int idEquipo,
+            int numeroEquipo) {
+        this.equipoNegocio = equipoNegocio;
+        this.idEquipo = idEquipo;
+        this.numeroEquipo = numeroEquipo;
+        LblTitulo.setText("Softwares Instalados en el equipo " + numeroEquipo + ":");
+        cargarSoftwares();
     }
 
     /**
@@ -176,6 +194,20 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
 
     private void BtnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscar1ActionPerformed
         // TODO add your handling code here:
+        String filtro = TxtBuacador.getText().trim().toLowerCase();
+
+        if (filtro.isEmpty() || filtro.equals("introduca un software a buacar...")) {
+            mostrarSoftwares(todosSoftwares);
+            return;
+        }
+
+        List<SoftwareDTO> filtrados = new ArrayList<>();
+        for (SoftwareDTO sw : todosSoftwares) {
+            if (sw.getNombre().toLowerCase().contains(filtro)) {
+                filtrados.add(sw);
+            }
+        }
+        mostrarSoftwares(filtrados);
     }//GEN-LAST:event_BtnBuscar1ActionPerformed
 
     private void BtnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSiguienteActionPerformed
@@ -184,46 +216,59 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnContunuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnContunuarActionPerformed
         // TODO add your handling code here:
+        try {
+        DlgApartadoConfirmacion dlg = new DlgApartadoConfirmacion(
+                (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
+                numeroEquipo);
+ 
+        DlgApartadoConfirmacion.Resultado resultado = dlg.mostrar();
+ 
+        if (resultado == DlgApartadoConfirmacion.Resultado.OK) {
+            equipoNegocio.cambiarEstadoEquipo(idEquipo, "Apartado");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Equipo " + numeroEquipo + " apartado exitosamente.",
+                    "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        }
+ 
+    } catch (Exception ex) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Error al apartar equipo: " + ex.getMessage(),
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_BtnContunuarActionPerformed
+    private void cargarSoftwares() {
+        try {
+            todosSoftwares = equipoNegocio.obtenerSoftwaresPorEquipo(idEquipo);
+            mostrarSoftwares(todosSoftwares);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error al cargar softwares: " + ex.getMessage(),
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
+    private void mostrarSoftwares(List<SoftwareDTO> softwares) {
+        if (softwares == null || softwares.isEmpty()) {
+            LblLista.setText("<html><i>No se encontraron softwares.</i></html>");
+            return;
+        }
+        StringBuilder sb = new StringBuilder("<html>");
+        for (SoftwareDTO sw : softwares) {
+            sb.append("• ").append(sw.getNombre()).append("<br>");
+        }
+        sb.append("</html>");
+        LblLista.setText(sb.toString());
+    }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmListaSoftwaresEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmListaSoftwaresEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmListaSoftwaresEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmListaSoftwaresEquipo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmListaSoftwaresEquipo().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAtras;
