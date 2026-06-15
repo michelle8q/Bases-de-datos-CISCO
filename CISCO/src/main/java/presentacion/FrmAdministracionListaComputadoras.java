@@ -21,12 +21,12 @@ import utilerias.ButtonRenderer;
  * @author hp
  */
 public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
-    
+
     private IUsoNegocio usoNegocio;
     private IBloqueoNegocio bloqueoNegocio;
     private IEquipoNegocio equipoNegocio;
     private Timer temporizadorActualizacion;
-
+    private IUsoNegocio conexionNegocio;
     private String textoBusquedaActual = "";
     private String laboratorioActual = "Laboratorio";
     private int paginaActual = 1;
@@ -37,9 +37,11 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdministracionListaComputadoras
      */
-    public FrmAdministracionListaComputadoras(IEquipoNegocio equipoNegocio) {
-        initComponents();
+    public FrmAdministracionListaComputadoras(IUsoNegocio conexionNegocio, negocio.IEquipoNegocio equipoNegocio, IBloqueoNegocio bloqueoNegocio) {
+        this.conexionNegocio = conexionNegocio;
         this.equipoNegocio = equipoNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
+        initComponents();
 
         cargarComboBoxLaboratorios();
 
@@ -263,13 +265,14 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
-       ventana.setVisible(true);
-       this.dispose();
+        FrmAdministracionBloqueados ventana = new FrmAdministracionBloqueados(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.usoNegocio, this.equipoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed

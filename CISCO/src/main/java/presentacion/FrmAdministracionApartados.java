@@ -21,7 +21,7 @@ import negocio.IEquipoNegocio;
  * @author hp
  */
 public class FrmAdministracionApartados extends javax.swing.JFrame {
-    
+
     private IBloqueoNegocio bloqueoNegocio;
     private IEquipoNegocio equipoNegocio;
     private IUsoNegocio conexionNegocio;
@@ -36,7 +36,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
      */
     public FrmAdministracionApartados(IUsoNegocio conexionNegocio, IEquipoNegocio equipoNegocio) {
         initComponents();
-        this.equipoNegocio = equipoNegocio; 
+        this.equipoNegocio = equipoNegocio;
         this.conexionNegocio = conexionNegocio;
         cargarComboBoxLaboratorios();
 
@@ -262,9 +262,10 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
-       ventana.setVisible(true);
-       this.dispose();
+        FrmAdministracionBloqueados ventana = new FrmAdministracionBloqueados(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
@@ -316,6 +317,10 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
+        FrmAdministracionListaComputadoras ventana = new FrmAdministracionListaComputadoras(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnListasActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -334,7 +339,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
         modeloTabla.setRowCount(0);
 
         try {
-            List<dto.ApartadoDTO> listaApartados = conexionNegocio.listarApartadosDelDia( LIMITE_POR_PAGINA, offset, textoBusquedaActual);
+            List<dto.ApartadoDTO> listaApartados = conexionNegocio.listarApartadosDelDia(LIMITE_POR_PAGINA, offset, textoBusquedaActual);
             DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 
             for (dto.ApartadoDTO apartado : listaApartados) {

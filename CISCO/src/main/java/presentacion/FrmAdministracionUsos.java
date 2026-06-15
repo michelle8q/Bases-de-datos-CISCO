@@ -36,9 +36,11 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
      * Creates new form FrmAdministracionUsos
      */
     public FrmAdministracionUsos(IUsoNegocio conexionNegocio, negocio.IEquipoNegocio equipoNegocio) {
-        initComponents();
+
         this.conexionNegocio = conexionNegocio;
         this.equipoNegocio = equipoNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
+        initComponents();
         cargarTablaUsosActivos();
         cargarComboBoxLaboratorios();
         iniciarActualizacionAutomatica();
@@ -262,9 +264,10 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
-       ventana.setVisible(true);
-       this.dispose();
+        FrmAdministracionBloqueados ventana = new FrmAdministracionBloqueados(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
@@ -276,7 +279,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
         // TODO add your handling code here:
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados(this.conexionNegocio, this.equipoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed
@@ -313,6 +316,10 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
+        FrmAdministracionListaComputadoras ventana = new FrmAdministracionListaComputadoras(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnListasActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed

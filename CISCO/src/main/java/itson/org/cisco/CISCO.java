@@ -35,6 +35,7 @@ import utilerias.Utilidades;
 public class CISCO {
 
     public static void main(String[] args) {
+
         try {
             IConexionBD conexionBD = new ConexionBD();
             IUsoDAO usoDAO = new UsoDAO(conexionBD);
@@ -47,7 +48,7 @@ public class CISCO {
             IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
 
             String ipEquipo = utilerias.Utilidades.obtenerDireccionIP();
-
+            
             String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
 
             if (tipoPantalla.equals("Administrador")) {
@@ -65,7 +66,7 @@ public class CISCO {
                 }
 
             } else if (tipoPantalla.equals("Apartados")) {
-                new FrmIngresoID().setVisible(true);
+                new FrmIngresoID(alumnoNegocio, equipoNegocio).setVisible(true);
             } else {
                 System.err.println("No tienes acceso");
                 System.exit(0);
