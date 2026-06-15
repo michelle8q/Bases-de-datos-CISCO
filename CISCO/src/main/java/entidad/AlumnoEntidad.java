@@ -38,7 +38,10 @@ public class AlumnoEntidad {
         this.apellidoMaterno = apellidoMaterno;
     }
     
-    
+    public String getNombreCompleto(){
+        String nombreCompleto = nombres+" "+apellidoPaterno+" "+apellidoPaterno;
+        return nombreCompleto;
+    }
 
     public int getId() {
         return id;

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package presentacion;
 
 import dto.EstadoEquipoDTO;
@@ -14,30 +11,32 @@ import dto.EstadoEquipoDTO;
 public class FrmEquipoDisponible extends javax.swing.JFrame {
 
     public FrmEquipoDisponible(EstadoEquipoDTO dto) {
-        initComponents();
+        initComponents(); 
         configurarPantalla(dto);
+        this.setLocationRelativeTo(null); 
     }
 
     private void configurarPantalla(EstadoEquipoDTO dto) {
         lblLaboratorio.setText(dto.getLaboratorio());
-        //lblNumEquipo.setText(dto.getNumero());
+        lblNumEquipo.setText(String.valueOf(dto.getNumero()));
 
 
         if (dto.getEstado().equalsIgnoreCase("Disponible")) {
             lblEstado.setText("Computadora disponible");
             lblEstado.setForeground(new java.awt.Color(0, 153, 51));
-            //lblApartadoPor.s
+            lblApartadoPor.setVisible(false);
+            lblNombreAlum.setVisible(false);
             
             pnlLogin.setVisible(false); 
             
         } else if (dto.getEstado().equalsIgnoreCase("Apartado")) {
             lblEstado.setText("Computadora apartada");
             lblEstado.setForeground(new java.awt.Color(204, 102, 0));
+            lblApartadoPor.setVisible(true);
+            lblNombreAlum.setVisible(true);
+            lblNombreAlum.setText(dto.getAlumno().getNombreCompleto());
             
-            //lblNombreAlumno.setText(dto.getNombreAlumno());
-            
-            // Mostrar controles para ingresar contraseña
-           //panelLogin.setVisible(true);
+            pnlLogin.setVisible(true);
         }
     }
 

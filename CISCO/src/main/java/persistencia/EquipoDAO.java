@@ -62,7 +62,9 @@ public class EquipoDAO implements IEquipoDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
 
-                    return rs.getString("Laboratorio");
+                    String laboratorio = rs.getString("nombre_laboratorio");
+                    String plantel = rs.getString("nombre_plantel");
+                    return laboratorio + " " + plantel;
                 }
             }
 

@@ -3,12 +3,15 @@
  */
 package itson.org.cisco;
 
+import dto.EstadoEquipoDTO;
 import negocio.IUsoNegocio;
 import negocio.UsoNegocio;
 import persistencia.AlumnoDAO;
 import persistencia.ConexionBD;
+import persistencia.EquipoDAO;
 import persistencia.IAlumnoDAO;
 import persistencia.IConexionBD;
+import persistencia.IEquipoDAO;
 import persistencia.IIpDAO;
 import persistencia.IUsoDAO;
 import persistencia.IpDAO;
@@ -27,15 +30,35 @@ public class CISCO {
 
     public static void main(String[] args) {
 
-        IConexionBD conexionBD = new ConexionBD();
+        try {
+            IConexionBD conexionBD = new ConexionBD();
 
-        IUsoDAO usoDAO = new UsoDAO(conexionBD);
-        IIpDAO ipDAO = new IpDAO(conexionBD); 
+            IUsoDAO usoDAO = new UsoDAO(conexionBD);
+            IIpDAO ipDAO = new IpDAO(conexionBD);
+            IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
 
-        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO); 
+            IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO);
 
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(usoNegocio);
-        ventana.setVisible(true);
+            String ipEquipo = Utilidades.obtenerDireccionIP();
+            String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
 
+            if (tipoPantalla.equals("Administrador")) {
+                new FrmAdministracionUsos(usoNegocio).setVisible(true);
+            } else if (tipoPantalla.equals("Alumno")) {
+                dto.EstadoEquipoDTO estadoEquipoDTO = usoNegocio.obtenerEstadoEquipo(ipEquipo);
+
+                FrmEquipoDisponible pantalla = new FrmEquipoDisponible(estadoEquipoDTO);
+                pantalla.setVisible(true);
+            } else if (tipoPantalla.equals("Apartados")) {
+                new FrmIngresoID().setVisible(true);
+            } else {
+                System.err.println("No tienes acceso");
+                System.exit(0);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

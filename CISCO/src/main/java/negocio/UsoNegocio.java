@@ -26,9 +26,10 @@ public class UsoNegocio implements IUsoNegocio {
     private IAlumnoDAO alumnoDAO;
     
 
-    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO) {
+    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO,IEquipoDAO equipoDAO) {
         this.usoDAO = usoDAO;
         this.ipDAO = ipDAO;
+        this.equipoDAO = equipoDAO;
     }
 
     @Override

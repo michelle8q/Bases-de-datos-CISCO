@@ -33,7 +33,7 @@ public class EstadoEquipoDTO {
         return estado;
     }
 
-    public AlumnoEntidad getNombreAlumno() {
+    public AlumnoEntidad getAlumno() {
         return alumno;
     }
 
@@ -53,7 +53,7 @@ public class EstadoEquipoDTO {
         this.estado = estado;
     }
 
-    public void setNombreAlumno(String nombreAlumno) {
+    public void setAlumno(String nombreAlumno) {
         this.alumno = alumno;
     }
 
