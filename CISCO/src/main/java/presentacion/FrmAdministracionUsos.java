@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import negocio.IBloqueoNegocio;
 
 /**
  *
@@ -23,6 +24,7 @@ import java.awt.event.ActionListener;
 public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private IUsoNegocio conexionNegocio;
+    private IBloqueoNegocio bloqueoNegocio;
     private Timer temporizadorActualizacion;
     private String textoBusquedaActual = "";
     private negocio.IEquipoNegocio equipoNegocio;
@@ -260,16 +262,23 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-        // TODO add your handling code here:
+       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
+       ventana.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
         // TODO add your handling code here:
-
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
         // TODO add your handling code here:
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
