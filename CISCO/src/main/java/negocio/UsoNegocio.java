@@ -124,8 +124,6 @@ public class UsoNegocio implements IUsoNegocio {
     @Override
     public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
         try {
-            // El DAO puede devolverte un objeto o un ResultSet con los datos unidos (Equipo + Alumno)
-            // Aquí simulamos que recuperas la información y la conviertes a DTO:
 
             int id = equipoDAO.obtenerIDAlumnoApartado(ip);
             String ubicacion = equipoDAO.obtenerLaboratorio(ip);
@@ -133,7 +131,7 @@ public class UsoNegocio implements IUsoNegocio {
             AlumnoEntidad alumno = alumnoDAO.buscarAlumnoPorId(id); 
 
             // Retornamos el DTO limpio a la presentación
-            return new EstadoEquipoDTO(id, ubicacion, estado, alumno.getNombres());
+            return new EstadoEquipoDTO(id, ubicacion, estado, alumno);
 
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al procesar el estado del equipo: " + e.getMessage());
