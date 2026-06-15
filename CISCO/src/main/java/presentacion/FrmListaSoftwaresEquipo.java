@@ -7,9 +7,25 @@ package presentacion;
 import negocio.IEquipoNegocio;
 
 import dto.SoftwareDTO;
+import entidad.AlumnoEntidad;
 import negocio.IEquipoNegocio;
 import java.util.List;
 import java.util.ArrayList;
+import negocio.AlumnoNegocio;
+import negocio.EquipoNegocio;
+import negocio.IAlumnoNegocio;
+import negocio.IUsoNegocio;
+import negocio.UsoNegocio;
+import persistencia.AlumnoDAO;
+import persistencia.ConexionBD;
+import persistencia.EquipoDAO;
+import persistencia.IAlumnoDAO;
+import persistencia.IConexionBD;
+import persistencia.IEquipoDAO;
+import persistencia.IIpDAO;
+import persistencia.IUsoDAO;
+import persistencia.IpDAO;
+import persistencia.UsoDAO;
 
 /**
  *
@@ -31,7 +47,14 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         this.equipoNegocio = equipoNegocio;
         this.idEquipo = idEquipo;
         this.numeroEquipo = numeroEquipo;
-        LblTitulo.setText("Softwares Instalados en el equipo " + numeroEquipo + ":");
+
+        // 2. ¡MUY IMPORTANTE! Creas la pantalla visual y todos sus elementos (botones, etiquetas)
+        initComponents();
+
+        // 3. Modificas el título para que muestre el número de equipo real
+        this.LblTitulo.setText("Softwares Instalados en el equipo " + numeroEquipo + ":");
+
+        // 4. Ahora sí, buscas y cargas los softwares en la etiqueta que ya existe
         cargarSoftwares();
     }
 
@@ -48,9 +71,7 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         LblTitulo = new javax.swing.JLabel();
         LblLista = new javax.swing.JLabel();
         TxtBuacador = new javax.swing.JTextField();
-        BtnAtras = new javax.swing.JButton();
         BtnBuscar1 = new javax.swing.JButton();
-        BtnSiguiente = new javax.swing.JButton();
         BtnCancelar = new javax.swing.JButton();
         BtnContunuar = new javax.swing.JButton();
 
@@ -59,7 +80,6 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         PnlFondo.setBackground(new java.awt.Color(204, 204, 204));
 
         LblTitulo.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
-        LblTitulo.setForeground(new java.awt.Color(0, 0, 0));
         LblTitulo.setText("Softwares Intalados en el equipo x:");
 
         LblLista.setText(" lista ");
@@ -71,24 +91,10 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
             }
         });
 
-        BtnAtras.setText("Atras");
-        BtnAtras.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnAtrasActionPerformed(evt);
-            }
-        });
-
         BtnBuscar1.setText("Buscar");
         BtnBuscar1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnBuscar1ActionPerformed(evt);
-            }
-        });
-
-        BtnSiguiente.setText("Siguiente");
-        BtnSiguiente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnSiguienteActionPerformed(evt);
             }
         });
 
@@ -118,20 +124,14 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(LblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(PnlFondoLayout.createSequentialGroup()
-                        .addGroup(PnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(PnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(PnlFondoLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(LblLista, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(PnlFondoLayout.createSequentialGroup()
                                 .addGap(34, 34, 34)
-                                .addComponent(BtnAtras)
-                                .addGap(359, 359, 359)
-                                .addComponent(BtnSiguiente))
-                            .addGroup(PnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(PnlFondoLayout.createSequentialGroup()
-                                    .addGap(20, 20, 20)
-                                    .addComponent(LblLista, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(PnlFondoLayout.createSequentialGroup()
-                                    .addGap(34, 34, 34)
-                                    .addComponent(TxtBuacador, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 35, Short.MAX_VALUE)))
+                                .addComponent(TxtBuacador, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 38, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(PnlFondoLayout.createSequentialGroup()
                 .addGap(130, 130, 130)
@@ -154,11 +154,7 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
                 .addComponent(TxtBuacador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(LblLista, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnAtras)
-                    .addComponent(BtnSiguiente))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                 .addGroup(PnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnCancelar)
                     .addComponent(BtnContunuar))
@@ -188,10 +184,6 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtBuacadorActionPerformed
 
-    private void BtnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAtrasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnAtrasActionPerformed
-
     private void BtnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscar1ActionPerformed
         // TODO add your handling code here:
         String filtro = TxtBuacador.getText().trim().toLowerCase();
@@ -210,37 +202,53 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         mostrarSoftwares(filtrados);
     }//GEN-LAST:event_BtnBuscar1ActionPerformed
 
-    private void BtnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSiguienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BtnSiguienteActionPerformed
-
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
-        // TODO add your handling code here:
+        IConexionBD conexion = new ConexionBD();
+        IUsoDAO usoDAO = new UsoDAO(conexion);
+        IIpDAO ipDAO = new IpDAO(conexion);
+        IEquipoDAO equipoDAO = new EquipoDAO(conexion);
+        IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
+        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
+        FrmEquipoSeleccion pantalla = new FrmEquipoSeleccion(
+                equipoNegocio,
+                usoNegocio,
+                new AlumnoEntidad(),
+                "Cisco"
+        );
+        pantalla.setVisible(true);
+        this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
     private void BtnContunuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnContunuarActionPerformed
         // TODO add your handling code here:
         try {
-        DlgApartadoConfirmacion dlg = new DlgApartadoConfirmacion(
-                (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
-                numeroEquipo);
- 
-        DlgApartadoConfirmacion.Resultado resultado = dlg.mostrar();
- 
-        if (resultado == DlgApartadoConfirmacion.Resultado.OK) {
-            equipoNegocio.cambiarEstadoEquipo(idEquipo, "Apartado");
+            DlgApartadoConfirmacion dlg = new DlgApartadoConfirmacion(
+                    (java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(this),
+                    numeroEquipo);
+
+            DlgApartadoConfirmacion.Resultado resultado = dlg.mostrar();
+
+            if (resultado == DlgApartadoConfirmacion.Resultado.OK) {
+                equipoNegocio.cambiarEstadoEquipo(idEquipo, "Apartado");
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Equipo " + numeroEquipo + " apartado exitosamente.",
+                        "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                IConexionBD conexion = new ConexionBD();
+                IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
+                IEquipoDAO equipoDAO = new EquipoDAO(conexion);
+                IAlumnoNegocio alumnoNeg = new AlumnoNegocio(alumnoDAO);
+                IEquipoNegocio equipoNeg = new EquipoNegocio(equipoDAO);
+                FrmIngresoID frm = new FrmIngresoID(alumnoNeg, equipoNeg);
+                frm.setVisible(true);
+                this.dispose();
+            }
+
+        } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
-                    "Equipo " + numeroEquipo + " apartado exitosamente.",
-                    "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
+                    "Error al apartar equipo: " + ex.getMessage(),
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
- 
-    } catch (Exception ex) {
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Error al apartar equipo: " + ex.getMessage(),
-                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_BtnContunuarActionPerformed
     private void cargarSoftwares() {
         try {
@@ -271,11 +279,9 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnAtras;
     private javax.swing.JButton BtnBuscar1;
     private javax.swing.JButton BtnCancelar;
     private javax.swing.JButton BtnContunuar;
-    private javax.swing.JButton BtnSiguiente;
     private javax.swing.JLabel LblLista;
     private javax.swing.JLabel LblTitulo;
     private javax.swing.JPanel PnlFondo;

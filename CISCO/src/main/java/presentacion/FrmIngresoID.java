@@ -1,30 +1,45 @@
-
 package presentacion;
 
+import dto.EstadoEquipoDTO;
 import entidad.AlumnoEntidad;
 import javax.swing.JOptionPane;
 import negocio.IAlumnoNegocio;
+import negocio.IEquipoNegocio;
+import negocio.IUsoNegocio;
 import negocio.NegocioException;
+import negocio.UsoNegocio;
+import persistencia.AlumnoDAO;
+import persistencia.ConexionBD;
+import persistencia.EquipoDAO;
+import persistencia.IAlumnoDAO;
+import persistencia.IConexionBD;
+import persistencia.IEquipoDAO;
+import persistencia.IIpDAO;
+import persistencia.IUsoDAO;
+import persistencia.IpDAO;
+import persistencia.UsoDAO;
 
 /**
  *
  * @author cinca
  */
 public class FrmIngresoID extends javax.swing.JFrame {
+
     private IAlumnoNegocio alumnoNegocio;
+    private IEquipoNegocio equipoNegocio;
 
     /**
      * Creates new form FrmSeleccionEquipo
      */
-    public FrmIngresoID(IAlumnoNegocio alumnoNegocio) {
+    public FrmIngresoID(IAlumnoNegocio alumnoNegocio, IEquipoNegocio equipoNegocio) {
         initComponents();
         this.alumnoNegocio = alumnoNegocio;
+        this.equipoNegocio = equipoNegocio;
     }
 
     public FrmIngresoID() {
         initComponents();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -143,40 +158,39 @@ public class FrmIngresoID extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
-        try {
-            validarIngresoId();
-            
-            int id = Integer.parseInt(txtId.getText());
-            
-            AlumnoEntidad alumno = alumnoNegocio.buscarPorId(id);
-            
-            FrmSeleccionEquipo pantalla = new FrmSeleccionEquipo(); //Tal vez despues necesite recibir el alumno
-            pantalla.setVisible(true);
-            
-        } catch (PresentacionException ex){
-             JOptionPane.showMessageDialog(this, ex.getMessage());
-     
-        } catch (NegocioException ex){
-             JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        IConexionBD conexion = new ConexionBD();
+        IUsoDAO usoDAO = new UsoDAO(conexion);
+        IIpDAO ipDAO = new IpDAO(conexion);
+        IEquipoDAO equipoDAO = new EquipoDAO(conexion);
+        IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
+        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
+        FrmEquipoSeleccion pantalla = new FrmEquipoSeleccion(
+                equipoNegocio,
+                usoNegocio,
+                new AlumnoEntidad(),
+                "Cisco"
+        );
+        pantalla.setVisible(true);
+        this.setVisible(false);
+        this.dispose();
+
     }//GEN-LAST:event_btnIngresarActionPerformed
-    
-    private void validarCampo(String valor) throws PresentacionException {  
+
+    private void validarCampo(String valor) throws PresentacionException {
         if (valor == null || valor.trim().isEmpty()) {
             throw new PresentacionException("El id no puede ser nulo.");
         }
     }
-    
+
     private void validarNumero(String valor) throws PresentacionException {
-        if(!valor.matches("\\d+")){
+        if (!valor.matches("\\d+")) {
             JOptionPane.showMessageDialog(this, "Formato inválido de id, solo puede tener números.");
             return;
         }
     }
-    
+
     private void validarIngresoId() throws PresentacionException {
-        
+
         String valor = txtId.getText();
         validarCampo(valor);
         validarNumero(valor);

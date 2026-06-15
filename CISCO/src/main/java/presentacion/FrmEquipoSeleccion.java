@@ -26,10 +26,10 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
     private JPanel pnlFondo;
     private JPanel pnlEquipos;
     private JLabel lblTitulo;
-    private JButton btnAtras;
-    private JButton btnSiguiente;
+   
     private JScrollPane scrollPane;
 
+   
     public FrmEquipoSeleccion(IEquipoNegocio equipoNegocio,
             IUsoNegocio usoNegocio,
             AlumnoEntidad alumnoActual,
@@ -40,11 +40,6 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
         this.nombreLaboratorio = nombreLaboratorio;
         initComponents();
         cargarEquipos();
-    }
-
-    public FrmEquipoSeleccion() {
-        initComponents();
-        cargarEquiposDemo();
     }
 
     private void initComponents() {
@@ -72,30 +67,19 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
 
         JPanel pnlBotones = new JPanel(new BorderLayout());
         pnlBotones.setBackground(COLOR_FONDO);
-
-        btnAtras = new JButton("Atrás");
-        btnAtras.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnAtras.setPreferredSize(new Dimension(100, 32));
-        btnAtras.addActionListener(e -> btnAtrasActionPerformed());
-
-        btnSiguiente = new JButton("Siguiente");
-        btnSiguiente.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnSiguiente.setPreferredSize(new Dimension(110, 32));
-        btnSiguiente.addActionListener(e -> btnSiguienteActionPerformed());
-
-        pnlBotones.add(btnAtras, BorderLayout.WEST);
-        pnlBotones.add(btnSiguiente, BorderLayout.EAST);
         pnlFondo.add(pnlBotones, BorderLayout.SOUTH);
 
         setContentPane(pnlFondo);
         pack();
     }
 
+    /**
+     * Consulta y carga dinámicamente los equipos reales desde la base de datos
+     */
     private void cargarEquipos() {
         pnlEquipos.removeAll();
 
         try {
-
             List<ListarEquipoDTO> equipos = equipoNegocio
                     .buscarEquiposPaginados(nombreLaboratorio, "", 50, 1);
 
@@ -122,25 +106,6 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,
                     "Error al cargar equipos: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-        pnlEquipos.revalidate();
-        pnlEquipos.repaint();
-    }
-
-    private void cargarEquiposDemo() {
-        pnlEquipos.removeAll();
-        configurarGrid(10);
-
-        for (int i = 1; i <= 10; i++) {
-            boolean disponible = (i != 1 && i != 7);
-            JButton btn = crearBotonEquipo(i, disponible);
-
-            if (disponible) {
-                final int num = i;
-                btn.addActionListener(e -> abrirListaSoftwares(num, num));
-            }
-            pnlEquipos.add(btn);
         }
 
         pnlEquipos.revalidate();
@@ -246,5 +211,4 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
                 "Seleccione un equipo verde para continuar.",
                 "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }
-
 }

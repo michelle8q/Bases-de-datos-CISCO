@@ -4,7 +4,10 @@
 package itson.org.cisco;
 
 import dto.EstadoEquipoDTO;
+import entidad.AlumnoEntidad;
+import negocio.AlumnoNegocio;
 import negocio.EquipoNegocio;
+import negocio.IAlumnoNegocio;
 import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.UsoNegocio;
@@ -22,6 +25,7 @@ import presentacion.FrmAdministracionApartados;
 import presentacion.FrmAdministracionListaComputadoras;
 import presentacion.FrmAdministracionUsos;
 import presentacion.FrmEquipoDisponible;
+import presentacion.FrmEquipoSeleccion;
 import presentacion.FrmIngresoID;
 import utilerias.Utilidades;
 
