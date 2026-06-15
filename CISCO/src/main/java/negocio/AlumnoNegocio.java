@@ -51,4 +51,16 @@ public class AlumnoNegocio implements IAlumnoNegocio {
            throw new NegocioException("El alumno no esta inscrito.");
         }
     }
+
+@Override
+    public boolean verificarCredencialesAlumno(int idAlumno, String contrasena) throws NegocioException {
+        try {
+            if (contrasena == null || contrasena.trim().isEmpty()) {
+                throw new NegocioException("La contraseña no puede estar vacía.");
+            }
+            return this.alumnoDAO.validarContrasena(idAlumno, contrasena);
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+    }
 }

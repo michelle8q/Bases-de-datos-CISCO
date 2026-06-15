@@ -4,7 +4,9 @@
 package itson.org.cisco;
 
 import dto.EstadoEquipoDTO;
+import negocio.AlumnoNegocio;
 import negocio.EquipoNegocio;
+import negocio.IAlumnoNegocio;
 import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.UsoNegocio;
@@ -38,6 +40,7 @@ public class CISCO {
             IIpDAO ipDAO = new IpDAO(conexionBD);
             IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
             IAlumnoDAO alumnoDAO = new AlumnoDAO(conexionBD);
+            IAlumnoNegocio alumnoNegocio = new AlumnoNegocio(alumnoDAO);
 
             IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
             IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
@@ -51,11 +54,10 @@ public class CISCO {
                 new FrmAdministracionUsos(usoNegocio, equipoNegocio).setVisible(true);
 
             } else if (tipoPantalla.equals("Alumno")) {
-
                 EstadoEquipoDTO estadoEquipoDTO = equipoNegocio.obtenerEstadoEquipo(ipEquipo);
 
                 if (estadoEquipoDTO != null) {
-                    new FrmEquipoDisponible(estadoEquipoDTO, usoNegocio, ipEquipo).setVisible(true);
+                    new FrmEquipoDisponible(estadoEquipoDTO, usoNegocio, alumnoNegocio, ipEquipo).setVisible(true);
                 } else {
                     System.err.println("Error: Esta máquina tiene rol de Alumno pero su IP no está registrada.");
                     System.exit(0);

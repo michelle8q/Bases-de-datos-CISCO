@@ -1,6 +1,7 @@
 package presentacion;
 
 import dto.EstadoEquipoDTO;
+import negocio.IAlumnoNegocio;
 import negocio.IUsoNegocio;
 import negocio.NegocioException;
 
@@ -11,14 +12,19 @@ import negocio.NegocioException;
 public class FrmEquipoDisponible extends javax.swing.JFrame {
 
     private final IUsoNegocio usoNegocio;
+    private final IAlumnoNegocio alumnoNegocio;
     private final String ipEquipo;
+    private final EstadoEquipoDTO estadoEquipoDTO;
 
-    public FrmEquipoDisponible(EstadoEquipoDTO dto, IUsoNegocio usoNegocio, String ipEquipo) {
+    public FrmEquipoDisponible(EstadoEquipoDTO dto, IUsoNegocio usoNegocio, IAlumnoNegocio alumnoNegocio, String ipEquipo) {
         initComponents();
+        btnLiberarEquipo.setVisible(false);
+        this.estadoEquipoDTO = dto;
         this.usoNegocio = usoNegocio;
+        this.alumnoNegocio = alumnoNegocio;
         this.ipEquipo = ipEquipo;
 
-        configurarPantalla(dto); 
+        configurarPantalla(dto);
         this.setLocationRelativeTo(null);
     }
 
@@ -68,6 +74,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         btnIngresar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         JPassContrasena = new javax.swing.JPasswordField();
+        btnLiberarEquipo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -203,16 +210,19 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Corbel", 1, 18)); // NOI18N
         jLabel4.setText("Verificando disponibilidad en:");
 
+        btnLiberarEquipo.setBackground(new java.awt.Color(204, 0, 0));
+        btnLiberarEquipo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnLiberarEquipo.setText("Cancelar apartado");
+        btnLiberarEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLiberarEquipoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlLoginLayout = new javax.swing.GroupLayout(pnlLogin);
         pnlLogin.setLayout(pnlLoginLayout);
         pnlLoginLayout.setHorizontalGroup(
             pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlLoginLayout.createSequentialGroup()
-                .addGap(502, 502, 502)
-                .addComponent(btnCancelar)
-                .addGap(101, 101, 101)
-                .addComponent(btnIngresar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLoginLayout.createSequentialGroup()
                 .addContainerGap(440, Short.MAX_VALUE)
                 .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,9 +230,17 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(171, 171, 171))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLoginLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(39, 39, 39)
-                        .addComponent(JPassContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(pnlLoginLayout.createSequentialGroup()
+                                .addComponent(btnCancelar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnLiberarEquipo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnIngresar))
+                            .addGroup(pnlLoginLayout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(39, 39, 39)
+                                .addComponent(JPassContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(459, 459, 459))))
         );
         pnlLoginLayout.setVerticalGroup(
@@ -239,7 +257,8 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                         .addContainerGap(119, Short.MAX_VALUE)
                         .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCancelar)
-                            .addComponent(btnIngresar))
+                            .addComponent(btnIngresar)
+                            .addComponent(btnLiberarEquipo))
                         .addGap(53, 53, 53)))
                 .addComponent(jLabel4)
                 .addGap(19, 19, 19))
@@ -299,49 +318,103 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        JPassContrasena.setText("");
+        char[] passwordArray = JPassContrasena.getPassword();
+        String contrasena = new String(passwordArray).trim();
+
+        if (contrasena.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Por favor, ingrese la contraseña para validar su identidad.",
+                    "Campo Requerido",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (this.estadoEquipoDTO == null || this.estadoEquipoDTO.getAlumno() == null) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error: No hay ningún alumno asignado a este apartado actualmente.",
+                    "Error de Contexto",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            int idAlumno = this.estadoEquipoDTO.getAlumno().getId();
+
+            boolean esValida = alumnoNegocio.verificarCredencialesAlumno(idAlumno, contrasena);
+
+            if (esValida) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "¡Contraseña correcta! Bienvenido al sistema.",
+                        "Acceso Concedido",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                btnLiberarEquipo.setVisible(true);
+                btnCancelar.setVisible(false);
+                btnLiberarEquipo.setVisible(false);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "La contraseña ingresada es incorrecta. Inténtelo de nuevo.",
+                        "Acceso Denegado",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                JPassContrasena.setText("");
+                JPassContrasena.requestFocus();
+            }
+
+        } catch (NegocioException e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error en la verificación: " + e.getMessage(),
+                    "Error del Sistema",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        
+
         int respuesta = javax.swing.JOptionPane.showConfirmDialog(this,
-                "¿Está seguro de que desea cancelar el apartado de este equipo?", 
-                "Confirmar Cancelación", 
-        javax.swing.JOptionPane.YES_NO_OPTION,
-        javax.swing.JOptionPane.WARNING_MESSAGE
-    );
-    
-    if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-        try {
-            usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
-            
-            javax.swing.JOptionPane.showMessageDialog(this, "El apartado ha sido cancelado con éxito.");
-            
-            lblEstado.setText("Computadora disponible");
-            lblEstado.setForeground(new java.awt.Color(0, 153, 51));
-            
-            lblApartadoPor.setVisible(false);
-            lblNombreAlum.setVisible(false);
-            pnlLogin.setVisible(false);
-            
-            JPassContrasena.setText("");
-            
-        } catch (NegocioException e) {
-            javax.swing.JOptionPane.showMessageDialog(
-                this, 
-                "Error al cancelar apartado: " + e.getMessage(), 
-                "Error", 
-                javax.swing.JOptionPane.ERROR_MESSAGE
-            );
+                "¿Está seguro de que desea cancelar el apartado de este equipo?",
+                "Confirmar Cancelación",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+            try {
+                usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
+
+                javax.swing.JOptionPane.showMessageDialog(this, "El apartado ha sido cancelado con éxito.");
+
+                lblEstado.setText("Computadora disponible");
+                lblEstado.setForeground(new java.awt.Color(0, 153, 51));
+
+                lblApartadoPor.setVisible(false);
+                lblNombreAlum.setVisible(false);
+                pnlLogin.setVisible(false);
+
+                JPassContrasena.setText("");
+
+            } catch (NegocioException e) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Error al cancelar apartado: " + e.getMessage(),
+                        "Error",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
-    }
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnLiberarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLiberarEquipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLiberarEquipoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField JPassContrasena;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnIngresar;
+    private javax.swing.JButton btnLiberarEquipo;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
