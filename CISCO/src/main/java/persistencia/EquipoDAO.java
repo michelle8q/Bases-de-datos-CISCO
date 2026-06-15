@@ -1,6 +1,7 @@
 package persistencia;
 
 import dto.EstadoEquipoDTO;
+import dto.SoftwareDTO;
 import entidad.AlumnoEntidad;
 import entidad.EquipoEntidad;
 import entidad.SoftwareEntidad;
@@ -214,8 +215,7 @@ public class EquipoDAO implements IEquipoDAO {
 
     @Override
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
-        // Unimos Equipos con Laboratorios (siempre existe)
-        // Unimos con Usos y Alumnos de forma externa (trae datos solo si existen)
+     
         String sql = "SELECT "
                 + "    e.numero AS numero_equipo, "
                 + "    l.nombre AS laboratorio, "
@@ -229,7 +229,7 @@ public class EquipoDAO implements IEquipoDAO {
                 + "LEFT JOIN Usos u ON e.id = u.idEquipo "
                 + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
                 + "WHERE e.direccionIP = ? "
-                + "ORDER BY u.id DESC LIMIT 1;"; 
+                + "ORDER BY u.id DESC LIMIT 1;";
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -267,15 +267,13 @@ public class EquipoDAO implements IEquipoDAO {
 
     @Override
     public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException {
-        List<SoftwareEntidad> lista = new ArrayList<>();
-
+        List<SoftwareEntidad> listaSoftwares = new ArrayList<>();
         String sql = """
-                 SELECT s.id, s.nombre
-                 FROM Softwares s
-                 INNER JOIN EquipoSoftware es ON s.id = es.idSoftware
-                 WHERE es.idEquipo = ?
-                 ORDER BY s.nombre ASC
-                 """;
+                     SELECT s.id, s.nombre 
+                     FROM Softwares s
+                     INNER JOIN EquipoSoftware es ON s.id = es.idSoftware
+                     WHERE es.idEquipo = ?
+                     """;
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -283,18 +281,16 @@ public class EquipoDAO implements IEquipoDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    SoftwareEntidad sw = new SoftwareEntidad();
-                    sw.setId(rs.getInt("id"));
-                    sw.setNombre(rs.getString("nombre"));
-                    lista.add(sw);
+                    SoftwareEntidad software = new SoftwareEntidad();
+                    software.setId(rs.getInt("id"));
+                    software.setNombre(rs.getString("nombre"));
+                    listaSoftwares.add(software);
                 }
             }
+            return listaSoftwares;
 
         } catch (SQLException e) {
-            System.err.println("Error al obtener softwares del equipo: " + e.getMessage());
-            throw new PersistenciaException("Error al obtener la lista de softwares del equipo.");
+            throw new PersistenciaException("Error al consultar los softwares del equipo: " + e.getMessage());
         }
-
-        return lista;
     }
 }
