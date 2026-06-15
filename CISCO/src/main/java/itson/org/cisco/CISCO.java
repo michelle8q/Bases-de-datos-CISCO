@@ -24,13 +24,9 @@ import persistencia.IIpDAO;
 import persistencia.IUsoDAO;
 import persistencia.IpDAO;
 import persistencia.UsoDAO;
-import presentacion.FrmAdministracionApartados;
-import presentacion.FrmAdministracionListaComputadoras;
 import presentacion.FrmAdministracionUsos;
 import presentacion.FrmEquipoDisponible;
-import presentacion.FrmEquipoSeleccion;
 import presentacion.FrmIngresoID;
-import utilerias.Utilidades;
 
 /**
  *
@@ -54,12 +50,13 @@ public class CISCO {
             IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
 
             String ipEquipo = utilerias.Utilidades.obtenerDireccionIP();
-            
+            System.out.println("IP de esta máquina: " + ipEquipo);
+
             String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
 
             if (tipoPantalla.equals("Administrador")) {
 
-                new FrmAdministracionUsos(usoNegocio, equipoNegocio).setVisible(true);
+                new FrmAdministracionUsos(usoNegocio, equipoNegocio, bloqueoNegocio).setVisible(true);
 
             } else if (tipoPantalla.equals("Alumno")) {
                 EstadoEquipoDTO estadoEquipoDTO = equipoNegocio.obtenerEstadoEquipo(ipEquipo);

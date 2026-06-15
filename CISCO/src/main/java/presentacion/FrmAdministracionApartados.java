@@ -269,13 +269,13 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed

@@ -35,7 +35,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdministracionUsos
      */
-    public FrmAdministracionUsos(IUsoNegocio conexionNegocio, negocio.IEquipoNegocio equipoNegocio) {
+    public FrmAdministracionUsos(IUsoNegocio conexionNegocio, negocio.IEquipoNegocio equipoNegocio, IBloqueoNegocio bloqueoNegocio) {
 
         this.conexionNegocio = conexionNegocio;
         this.equipoNegocio = equipoNegocio;
@@ -272,7 +272,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
         // TODO add your handling code here:
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed

@@ -263,7 +263,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed
@@ -277,7 +277,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
         FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
         ventana.setVisible(true);
-        this.dispose();
+        
     }//GEN-LAST:event_btnBloquearActionPerformed
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
