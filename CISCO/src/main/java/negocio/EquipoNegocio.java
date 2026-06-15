@@ -16,7 +16,7 @@ import persistencia.PersistenciaException;
  */
 public class EquipoNegocio implements IEquipoNegocio{
 
-    private IEquipoDAO equipoDAO;
+    private final IEquipoDAO equipoDAO;
 
     // Inyección de dependencias: le pasamos el DAO por el constructor
     public EquipoNegocio(IEquipoDAO equipoDAO) {

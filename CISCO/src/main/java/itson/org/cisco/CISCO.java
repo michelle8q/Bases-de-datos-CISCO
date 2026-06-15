@@ -3,6 +3,7 @@
  */
 package itson.org.cisco;
 
+import dto.EstadoEquipoDTO;
 import negocio.EquipoNegocio;
 import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
@@ -31,32 +32,50 @@ import utilerias.Utilidades;
 public class CISCO {
 
     public static void main(String[] args) {
-
-        try {
-            IConexionBD conexionBD = new ConexionBD();
-
-        IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
-        IIpDAO ipDAO = new IpDAO(conexionBD);
+    try {
+        IConexionBD conexionBD = new ConexionBD(); 
         IUsoDAO usoDAO = new UsoDAO(conexionBD);
+        IIpDAO ipDAO = new IpDAO(conexionBD); 
+        IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
+        IAlumnoDAO alumnoDAO = new AlumnoDAO(conexionBD);
 
+        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
         IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
-        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO);
 
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(usoNegocio, equipoNegocio);
-        ventana.setVisible(true);
+        String ipEquipo = utilerias.Utilidades.obtenerDireccionIP();
+        
+        String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
 
-                FrmEquipoDisponible pantalla = new FrmEquipoDisponible(estadoEquipoDTO);
-                pantalla.setVisible(true);
-            } else if (tipoPantalla.equals("Apartados")) {
-                new FrmIngresoID().setVisible(true);
+        if (tipoPantalla.equals("Administrador")) {
+            
+            new FrmAdministracionUsos(usoNegocio, equipoNegocio).setVisible(true);
+            
+        } else if (tipoPantalla.equals("Alumno")) {
+            
+            EstadoEquipoDTO estadoEquipoDTO = equipoNegocio.obtenerEstadoEquipo(ipEquipo);
+            
+            if (estadoEquipoDTO != null) {
+                new FrmEquipoDisponible(estadoEquipoDTO).setVisible(true);
             } else {
-                System.err.println("No tienes acceso");
+                System.err.println("Error: Esta máquina tiene rol de Alumno pero su IP no está registrada.");
                 System.exit(0);
             }
-
-        } catch (Exception e) {
-            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
-            e.printStackTrace();
+            
+        } else if (tipoPantalla.equals("Apartados")) {
+            new FrmIngresoID().setVisible(true);
+        } else {
+            System.err.println("No tienes acceso");
+            System.exit(0);
         }
+
+    } catch (Exception e) {
+        System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+        e.printStackTrace();
     }
 }
+        
+    }
+
+        
+
+

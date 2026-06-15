@@ -192,20 +192,18 @@ public class EquipoDAO implements IEquipoDAO {
             throw new PersistenciaException("Error al actualizar el estado del equipo.");
         }
     }
-    
+
     @Override
     public List<String> obtenerNombresLaboratorios() throws PersistenciaException {
         List<String> laboratorios = new ArrayList<>();
         String sql = "SELECT nombre FROM Laboratorios ORDER BY nombre ASC";
-        
-        try (Connection con = this.conexion.crearConexion(); 
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
+
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 laboratorios.add(rs.getString("nombre"));
             }
-            
+
         } catch (SQLException e) {
             System.err.println("Error al consultar laboratorios: " + e.getMessage());
             throw new PersistenciaException("Error al obtener la lista de laboratorios.");
@@ -215,12 +213,22 @@ public class EquipoDAO implements IEquipoDAO {
 
     @Override
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
-        String sql = "SELECT e.numero_equipo, e.laboratorio, e.estado, "
-                + "a.id_alumno, a.nombre, a.apellidoPaterno, a.apellidoMaterno "
-                +"FROM equipos e "
-                + "LEFT JOIN apartados ap ON e.id = ap.id_equipo AND ap.activo = true "
-                + "LEFT JOIN alumnos a ON ap.id_alumno = a.id_alumno "
-                + "WHERE e.ip_equipo = ?";
+        // Unimos Equipos con Laboratorios (siempre existe)
+        // Unimos con Usos y Alumnos de forma externa (trae datos solo si existen)
+        String sql = "SELECT "
+                + "    e.numero AS numero_equipo, "
+                + "    l.nombre AS laboratorio, "
+                + "    e.estado, "
+                + "    a.id AS id_alumno, "
+                + "    a.nombres, "
+                + "    a.apellidoPaterno, "
+                + "    a.apellidoMaterno "
+                + "FROM Equipos e "
+                + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
+                + "LEFT JOIN Usos u ON e.id = u.idEquipo "
+                + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
+                + "WHERE e.direccionIP = ? "
+                + "ORDER BY u.id DESC LIMIT 1;"; 
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -230,28 +238,29 @@ public class EquipoDAO implements IEquipoDAO {
                 if (rs.next()) {
                     int numero = rs.getInt("numero_equipo");
                     String laboratorio = rs.getString("laboratorio");
-                    String estadoEquipo = rs.getString("estado");
+                    String estado = rs.getString("estado");
 
                     AlumnoEntidad alumno = null;
-                    String nombreAlumno = rs.getString("nombre");
-                    if (nombreAlumno != null) {
+
+                    if (estado.equalsIgnoreCase("Apartado") && rs.getObject("id_alumno") != null) {
                         alumno = new AlumnoEntidad();
                         alumno.setId(rs.getInt("id_alumno"));
-                        alumno.setNombres(nombreAlumno);
-                        alumno.setApellidoPaterno("apellidoPaterno");
-                        alumno.setApellidoMaterno("apellidoMaterno");
+
+                        String nombres = rs.getString("nombres");
+                        String apPaterno = rs.getString("apellidoPaterno");
+                        String apMaterno = rs.getString("apellidoMaterno");
+
+                        alumno.setNombres(nombres);
+                        alumno.setApellidoPaterno(apPaterno);
+                        alumno.setApellidoMaterno(apMaterno);
                     }
 
-                    return new EstadoEquipoDTO(numero, laboratorio, estadoEquipo, alumno);
+                    return new EstadoEquipoDTO(numero, laboratorio, estado, alumno);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al contar equipos: " + e.getMessage());
-            throw new PersistenciaException("Error al contar los equipos para la paginación.");
+            throw new PersistenciaException("Error al consultar el estado del equipo por IP: " + e.getMessage());
         }
         return null;
     }
 }
-
-
-

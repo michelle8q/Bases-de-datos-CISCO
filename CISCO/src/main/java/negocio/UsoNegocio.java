@@ -25,6 +25,7 @@ public class UsoNegocio implements IUsoNegocio {
     private IEquipoDAO equipoDAO;
     private IAlumnoDAO alumnoDAO;
     
+    
 
     public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO,IEquipoDAO equipoDAO, IAlumnoDAO alumnoDAO) {
         this.usoDAO = usoDAO;

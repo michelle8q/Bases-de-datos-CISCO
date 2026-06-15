@@ -42,6 +42,8 @@ public class AlumnoEntidad {
         String nombreCompleto = nombres+" "+apellidoPaterno+" "+apellidoPaterno;
         return nombreCompleto;
     }
+    
+    
 
     public int getId() {
         return id;

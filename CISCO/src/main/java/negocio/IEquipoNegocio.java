@@ -11,6 +11,7 @@ import java.util.List;
 public interface IEquipoNegocio {
     
     EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException;
+    
     List<ListarEquipoDTO> buscarEquiposPaginados(String nombreLaboratorio, String filtro, int limite, int pagina) throws Exception;
 
     int obtenerTotalPaginas(String nombreLaboratorio, String filtro, int limite) throws Exception;
