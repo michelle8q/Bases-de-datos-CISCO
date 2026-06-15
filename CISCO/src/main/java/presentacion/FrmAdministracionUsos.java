@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import negocio.IBloqueoNegocio;
+import negocio.IEquipoNegocio;
 
 /**
  *
@@ -24,14 +25,13 @@ import negocio.IBloqueoNegocio;
 public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private IUsoNegocio conexionNegocio;
+    private IEquipoNegocio equipoNegocio;
     private IBloqueoNegocio bloqueoNegocio;
     private Timer temporizadorActualizacion;
     private String textoBusquedaActual = "";
-    private negocio.IEquipoNegocio equipoNegocio;
     private int paginaActual = 1;
     private final int LIMITE_POR_PAGINA = 5;
     private String laboratorioActual = "Laboratorio";
-
     /**
      * Creates new form FrmAdministracionUsos
      */

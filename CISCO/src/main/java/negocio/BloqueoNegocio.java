@@ -20,8 +20,9 @@ public class BloqueoNegocio implements IBloqueoNegocio {
     private IBloqueoDAO bloqueoDAO;
     private IAlumnoDAO alumno;
 
-    public BloqueoNegocio(IBloqueoDAO bloqueoDAO) {
+    public BloqueoNegocio(IBloqueoDAO bloqueoDAO, IAlumnoDAO alumno) {
         this.bloqueoDAO = bloqueoDAO;
+        this.alumno = alumno;
     }
     
     @Override

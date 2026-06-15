@@ -23,11 +23,9 @@ import negocio.NegocioException;
  */
 public class FrmAdministracionBloqueados extends javax.swing.JFrame {
 
-    private IUsoNegocio usoNegocio;
-    private IEquipoNegocio apartadoNegocio;
-    private IBloqueoNegocio bloqueoNegocio;
     private IUsoNegocio conexionNegocio;
     private negocio.IEquipoNegocio equipoNegocio;
+    private IBloqueoNegocio bloqueoNegocio;
     private int paginaActual = 1;
     private Timer temporizadorActualizacion;
     private final int LIMITE_POR_PAGINA = 5;
@@ -43,10 +41,6 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
 
         cargarTablaBloqueosActivos();
         iniciarActualizacionAutomatica();
-    }
-
-    public FrmAdministracionBloqueados() {
-        initComponents();
     }
 
     /**
@@ -269,7 +263,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.usoNegocio, this.apartadoNegocio);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.conexionNegocio, this.equipoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed

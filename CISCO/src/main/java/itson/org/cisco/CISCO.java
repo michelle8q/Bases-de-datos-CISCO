@@ -5,15 +5,19 @@ package itson.org.cisco;
 
 import dto.EstadoEquipoDTO;
 import negocio.AlumnoNegocio;
+import negocio.BloqueoNegocio;
 import negocio.EquipoNegocio;
 import negocio.IAlumnoNegocio;
+import negocio.IBloqueoNegocio;
 import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.UsoNegocio;
 import persistencia.AlumnoDAO;
+import persistencia.BloqueoDAO;
 import persistencia.ConexionBD;
 import persistencia.EquipoDAO;
 import persistencia.IAlumnoDAO;
+import persistencia.IBloqueoDAO;
 import persistencia.IConexionBD;
 import persistencia.IEquipoDAO;
 import persistencia.IIpDAO;
@@ -40,9 +44,11 @@ public class CISCO {
             IConexionBD conexionBD = new ConexionBD();
             IUsoDAO usoDAO = new UsoDAO(conexionBD);
             IIpDAO ipDAO = new IpDAO(conexionBD);
+            IBloqueoDAO bloqueoDAO = new BloqueoDAO(conexionBD);
             IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
             IAlumnoDAO alumnoDAO = new AlumnoDAO(conexionBD);
             IAlumnoNegocio alumnoNegocio = new AlumnoNegocio(alumnoDAO);
+            IBloqueoNegocio bloqueoNegocio = new BloqueoNegocio(bloqueoDAO, alumnoDAO);
 
             IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
             IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
