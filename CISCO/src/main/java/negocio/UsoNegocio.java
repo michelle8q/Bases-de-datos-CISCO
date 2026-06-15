@@ -1,4 +1,3 @@
-
 package negocio;
 
 import dto.ApartadoDTO;
@@ -24,10 +23,8 @@ public class UsoNegocio implements IUsoNegocio {
     private IIpDAO ipDAO;
     private IEquipoDAO equipoDAO;
     private IAlumnoDAO alumnoDAO;
-    
-    
 
-    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO,IEquipoDAO equipoDAO, IAlumnoDAO alumnoDAO) {
+    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO, IEquipoDAO equipoDAO, IAlumnoDAO alumnoDAO) {
         this.usoDAO = usoDAO;
         this.ipDAO = ipDAO;
         this.equipoDAO = equipoDAO;
@@ -124,5 +121,16 @@ public class UsoNegocio implements IUsoNegocio {
         }
     }
 
+    @Override
+    public void cancelarApartadoEquipo(String ip) throws NegocioException {
+        try {
+            if (ip == null || ip.trim().isEmpty()) {
+                throw new NegocioException("La dirección IP del equipo no es válida.");
+            }
+            this.usoDAO.eliminarUsoActivoPorIP(ip);
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+    }
 
 }

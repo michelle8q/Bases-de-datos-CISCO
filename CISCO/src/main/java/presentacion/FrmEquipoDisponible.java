@@ -1,41 +1,46 @@
-
 package presentacion;
 
 import dto.EstadoEquipoDTO;
+import negocio.IUsoNegocio;
+import negocio.NegocioException;
 
 /**
  *
  * @author cinca piña
  */
-
 public class FrmEquipoDisponible extends javax.swing.JFrame {
 
-    public FrmEquipoDisponible(EstadoEquipoDTO dto) {
-        initComponents(); 
-        configurarPantalla(dto);
-        this.setLocationRelativeTo(null); 
+    private final IUsoNegocio usoNegocio;
+    private final String ipEquipo;
+
+    public FrmEquipoDisponible(EstadoEquipoDTO dto, IUsoNegocio usoNegocio, String ipEquipo) {
+        initComponents();
+        this.usoNegocio = usoNegocio;
+        this.ipEquipo = ipEquipo;
+
+        configurarPantalla(dto); 
+        this.setLocationRelativeTo(null);
     }
 
     private void configurarPantalla(EstadoEquipoDTO dto) {
         lblLaboratorio.setText(dto.getLaboratorio());
         lblNumEquipo.setText(String.valueOf(dto.getNumero()));
 
-
         if (dto.getEstado().equalsIgnoreCase("Disponible")) {
             lblEstado.setText("Computadora disponible");
             lblEstado.setForeground(new java.awt.Color(0, 153, 51));
             lblApartadoPor.setVisible(false);
             lblNombreAlum.setVisible(false);
-            
-            pnlLogin.setVisible(false); 
-            
+
+            pnlLogin.setVisible(false);
+
         } else if (dto.getEstado().equalsIgnoreCase("Apartado")) {
             lblEstado.setText("Computadora apartada");
             lblEstado.setForeground(new java.awt.Color(204, 102, 0));
             lblApartadoPor.setVisible(true);
             lblNombreAlum.setVisible(true);
             lblNombreAlum.setText(dto.getAlumno().getNombreCompleto());
-            
+
             pnlLogin.setVisible(true);
         }
     }
@@ -298,7 +303,38 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        JPassContrasena.setText("");
+        
+        int respuesta = javax.swing.JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de que desea cancelar el apartado de este equipo?", 
+                "Confirmar Cancelación", 
+        javax.swing.JOptionPane.YES_NO_OPTION,
+        javax.swing.JOptionPane.WARNING_MESSAGE
+    );
+    
+    if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+        try {
+            usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
+            
+            javax.swing.JOptionPane.showMessageDialog(this, "El apartado ha sido cancelado con éxito.");
+            
+            lblEstado.setText("Computadora disponible");
+            lblEstado.setForeground(new java.awt.Color(0, 153, 51));
+            
+            lblApartadoPor.setVisible(false);
+            lblNombreAlum.setVisible(false);
+            pnlLogin.setVisible(false);
+            
+            JPassContrasena.setText("");
+            
+        } catch (NegocioException e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this, 
+                "Error al cancelar apartado: " + e.getMessage(), 
+                "Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
 

@@ -16,4 +16,6 @@ public interface IUsoDAO {
     List<UsoEntidad> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws PersistenciaException;
 
     List<UsoEntidad> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws PersistenciaException;
+    
+    void eliminarUsoActivoPorIP(String ip) throws PersistenciaException;
 }

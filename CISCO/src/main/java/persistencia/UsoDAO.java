@@ -62,11 +62,11 @@ public class UsoDAO implements IUsoDAO {
 
             if (hayFiltro) {
                 String patron = "%" + filtroBusqueda.trim() + "%";
-                sentenciaPreparada.setString(indiceParametro++, patron); 
-                sentenciaPreparada.setString(indiceParametro++, patron); 
                 sentenciaPreparada.setString(indiceParametro++, patron);
-                sentenciaPreparada.setString(indiceParametro++, patron); 
-                sentenciaPreparada.setString(indiceParametro++, patron); 
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
             }
 
             sentenciaPreparada.setInt(indiceParametro++, limite);
@@ -168,5 +168,25 @@ public class UsoDAO implements IUsoDAO {
                 alumnoAsignado,
                 equipoAsignado
         );
+    }
+
+    @Override
+    public void eliminarUsoActivoPorIP(String ip) throws PersistenciaException {
+        String sql = """
+                    DELETE u FROM usos u 
+                    INNER JOIN Equipos e ON u.idEquipo = e.id 
+                    WHERE e.direccionIP = ?
+                     """
+                ;
+                                         
+
+        try (Connection con = this.conexionBaseDatos.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, ip);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al eliminar el apartado en la base de datos: " + e.getMessage());
+        }
     }
 }

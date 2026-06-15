@@ -18,5 +18,5 @@ public interface IUsoNegocio {
 
     List<ApartadoDTO> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws NegocioException;
 
-   
+   void cancelarApartadoEquipo(String ip) throws NegocioException;
 }
