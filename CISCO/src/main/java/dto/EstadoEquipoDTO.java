@@ -1,5 +1,7 @@
 package dto;
 
+import entidad.AlumnoEntidad;
+
 /**
  *
  * @author piña
@@ -9,14 +11,14 @@ public class EstadoEquipoDTO {
     private int numero;
     private String laboratorio;
     private String estado; 
-    private String nombreAlumno; // Se quedará vacío si está disponible
+    private AlumnoEntidad alumno; // Se quedará vacío si está disponible
     private String ip;
 
-    public EstadoEquipoDTO(int numero, String laboratorio, String estado, String nombreAlumno) {
+    public EstadoEquipoDTO(int numero, String laboratorio, String estado, AlumnoEntidad alumno) {
         this.numero = numero;
         this.laboratorio = laboratorio;
         this.estado = estado;
-        this.nombreAlumno = nombreAlumno;
+        this.alumno = alumno;
     }
 
     public int getNumero() {
@@ -31,8 +33,8 @@ public class EstadoEquipoDTO {
         return estado;
     }
 
-    public String getNombreAlumno() {
-        return nombreAlumno;
+    public AlumnoEntidad getNombreAlumno() {
+        return alumno;
     }
 
     public String getIp() {
@@ -52,7 +54,7 @@ public class EstadoEquipoDTO {
     }
 
     public void setNombreAlumno(String nombreAlumno) {
-        this.nombreAlumno = nombreAlumno;
+        this.alumno = alumno;
     }
 
     public void setIp(String ip) {
