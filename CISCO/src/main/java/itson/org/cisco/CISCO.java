@@ -36,9 +36,9 @@ public class CISCO {
             IUsoDAO usoDAO = new UsoDAO(conexionBD);
             IIpDAO ipDAO = new IpDAO(conexionBD);
             IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
+            IAlumnoDAO alumnoDAO = new AlumnoDAO(conexionBD);
 
-            IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO);
-
+            IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO); //
             String ipEquipo = Utilidades.obtenerDireccionIP();
             String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
 

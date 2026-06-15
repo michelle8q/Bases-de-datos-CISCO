@@ -1,5 +1,7 @@
 package persistencia;
 
+import dto.EstadoEquipoDTO;
+import entidad.AlumnoEntidad;
 import entidad.EquipoEntidad;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -77,31 +79,6 @@ public class EquipoDAO implements IEquipoDAO {
     }
 
     @Override
-    public String obtenerEstado(String IP) throws PersistenciaException {
-        String sql = """
-                     SELECT estado FROM equipos WHERE direccionIP = ?
-                     """;
-
-        try (Connection conexion = this.conexion.crearConexion(); PreparedStatement statement = conexion.prepareStatement(sql)) {
-
-            statement.setString(1, IP);
-
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-
-                    return rs.getString("estado");
-                }
-            }
-
-            return null;
-
-        } catch (SQLException e) {
-            System.err.println("Error al obtener el número de equipo por IP: " + e.getMessage());
-            throw new PersistenciaException("Error en la base de datos al buscar el equipo.");
-        }
-    }
-
-    @Override
     public int obtenerIDAlumnoApartado(String IP) throws PersistenciaException {
         String sql = """
                      SELECT 
@@ -121,7 +98,7 @@ public class EquipoDAO implements IEquipoDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
 
-                    return rs.getInt("IDAlumno");
+                    return rs.getInt("id_alumno");
                 }
             }
 
@@ -216,4 +193,43 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
+    @Override
+    public String obtenerEstado(String IP) throws PersistenciaException {
+        String sql = "SELECT e.numero_equipo, e.laboratorio, e.estado, "
+                + "a.id_alumno, a.nombre, a.apellidoPaterno, a.apellidoMaterno "
+                +"FROM equipos e "
+                + "LEFT JOIN apartados ap ON e.id = ap.id_equipo AND ap.activo = true "
+                + "LEFT JOIN alumnos a ON ap.id_alumno = a.id_alumno "
+                + "WHERE e.ip_equipo = ?";
+
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, IP);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int numero = rs.getInt("numero_equipo");
+                    String laboratorio = rs.getString("laboratorio");
+                    String estadoEquipo = rs.getString("estado");
+
+                    AlumnoEntidad alumno = null;
+                    String nombreAlumno = rs.getString("nombre");
+                    if (nombreAlumno != null) {
+                        alumno = new AlumnoEntidad();
+                        alumno.setId(rs.getInt("id_alumno"));
+                        alumno.setNombres(nombreAlumno);
+                        alumno.setApellidoPaterno(laboratorio);
+                    }
+
+                    return new EstadoEquipoDTO(numero, laboratorio, estadoEquipo, alumno);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultar la base de datos", e);
+        }
+        return null;
+    }
 }
+
+
+

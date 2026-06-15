@@ -20,6 +20,7 @@ public class EstadoEquipoDTO {
         this.estado = estado;
         this.alumno = alumno;
     }
+    
 
     public int getNumero() {
         return numero;

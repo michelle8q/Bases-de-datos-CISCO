@@ -26,10 +26,11 @@ public class UsoNegocio implements IUsoNegocio {
     private IAlumnoDAO alumnoDAO;
     
 
-    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO,IEquipoDAO equipoDAO) {
+    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO,IEquipoDAO equipoDAO, IAlumnoDAO alumnoDAO) {
         this.usoDAO = usoDAO;
         this.ipDAO = ipDAO;
         this.equipoDAO = equipoDAO;
+        this.alumnoDAO = alumnoDAO;
     }
 
     @Override
@@ -122,20 +123,5 @@ public class UsoNegocio implements IUsoNegocio {
         }
     }
 
-    @Override
-    public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
-        try {
-
-            int id = equipoDAO.obtenerIDAlumnoApartado(ip);
-            String ubicacion = equipoDAO.obtenerLaboratorio(ip);
-            String estado = equipoDAO.obtenerEstado(ip);
-            AlumnoEntidad alumno = alumnoDAO.buscarAlumnoPorId(id); 
-
-            return new EstadoEquipoDTO(id, ubicacion, estado, alumno);
-
-        } catch (PersistenciaException e) {
-            throw new NegocioException("Error al procesar el estado del equipo: " + e.getMessage());
-        }
-    }
 
 }
