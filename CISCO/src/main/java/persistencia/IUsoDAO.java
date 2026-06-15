@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IUsoDAO {
 
-    List<UsoEntidad> listarUsosActivos(int limite, int offset) throws PersistenciaException;
+    List<UsoEntidad> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws PersistenciaException;
 
-    List<UsoEntidad> listarApartadosDelDia(int limite, int offset) throws PersistenciaException;
+    List<UsoEntidad> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws PersistenciaException;
 }

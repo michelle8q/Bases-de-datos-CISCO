@@ -13,8 +13,8 @@ public interface IUsoNegocio {
     
     public String determinarPantalla(String ip) throws NegocioException;
 
-    List<UsoDTO> listarUsosActivos(int limite, int offset) throws NegocioException;
+    List<UsoDTO> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws NegocioException;
 
-    List<ApartadoDTO> listarApartadosDelDia(int limite, int offset) throws NegocioException;
+    List<ApartadoDTO> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws NegocioException;
 
 }

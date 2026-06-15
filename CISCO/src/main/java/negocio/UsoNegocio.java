@@ -28,9 +28,9 @@ public class UsoNegocio implements IUsoNegocio {
     }
 
     @Override
-    public List<UsoDTO> listarUsosActivos(int limite, int offset) throws NegocioException {
+    public List<UsoDTO> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws NegocioException {
         try {
-            List<UsoEntidad> usos = usoDAO.listarUsosActivos(limite, offset);
+            List<UsoEntidad> usos = usoDAO.listarUsosActivos(limite, offset, filtroBusqueda);
             if (usos.isEmpty()) {
                 throw new NegocioException("No hay usos activos en este momento.");
             }
@@ -59,9 +59,9 @@ public class UsoNegocio implements IUsoNegocio {
     }
 
     @Override
-    public List<ApartadoDTO> listarApartadosDelDia(int limite, int offset) throws NegocioException {
+    public List<ApartadoDTO> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws NegocioException {
         try {
-            List<UsoEntidad> apartados = usoDAO.listarApartadosDelDia(limite, offset);
+            List<UsoEntidad> apartados = usoDAO.listarApartadosDelDia(limite, offset, filtroBusqueda);
 
             if (apartados.isEmpty()) {
                 throw new NegocioException("No hay apartados registrados hoy o no hay más páginas.");

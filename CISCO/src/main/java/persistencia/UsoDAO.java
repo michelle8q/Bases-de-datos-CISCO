@@ -28,26 +28,49 @@ public class UsoDAO implements IUsoDAO {
     }
 
     @Override
-    public List<UsoEntidad> listarUsosActivos(int limite, int offset) throws PersistenciaException {
+    public List<UsoEntidad> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws PersistenciaException {
         List<UsoEntidad> listaDeUsos = new ArrayList<>();
 
         try (Connection conexionAbierta = this.conexionBaseDatos.crearConexion()) {
 
-            String sentenciaSQL = """
-                                   SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
-                                          Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
-                                          Equipos.id AS idDelEquipo, Equipos.direccionIP 
-                                   FROM Usos 
-                                   INNER JOIN Alumnos ON Usos.idAlumno = Alumnos.id 
-                                   INNER JOIN Equipos ON Usos.idEquipo = Equipos.id 
-                                   WHERE Usos.fechaHoraInicio IS NOT NULL AND Usos.fechaHoraFin IS NULL
-                                   LIMIT ? OFFSET ?;
-                                  """;
+            boolean hayFiltro = filtroBusqueda != null && !filtroBusqueda.trim().isEmpty();
 
-            PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL);
+            StringBuilder sentenciaSQL = new StringBuilder("""
+                           SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
+                                  Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
+                                  Equipos.id AS idDelEquipo, Equipos.direccionIP 
+                           FROM Usos 
+                           INNER JOIN Alumnos ON Usos.idAlumno = Alumnos.id 
+                           INNER JOIN Equipos ON Usos.idEquipo = Equipos.id 
+                           WHERE Usos.fechaHoraFin IS NULL
+                           """);
 
-            sentenciaPreparada.setInt(1, limite);
-            sentenciaPreparada.setInt(2, offset);
+            if (hayFiltro) {
+                sentenciaSQL.append("""
+                 AND (Alumnos.nombres LIKE ? 
+                 OR Alumnos.apellidoPaterno LIKE ? 
+                 OR Alumnos.apellidoMaterno LIKE ? 
+                 OR Alumnos.id LIKE ? 
+                 OR Equipos.id LIKE ?) 
+            """);
+            }
+
+            sentenciaSQL.append(" LIMIT ? OFFSET ?;");
+
+            PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL.toString());
+            int indiceParametro = 1;
+
+            if (hayFiltro) {
+                String patron = "%" + filtroBusqueda.trim() + "%";
+                sentenciaPreparada.setString(indiceParametro++, patron); 
+                sentenciaPreparada.setString(indiceParametro++, patron); 
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron); 
+                sentenciaPreparada.setString(indiceParametro++, patron); 
+            }
+
+            sentenciaPreparada.setInt(indiceParametro++, limite);
+            sentenciaPreparada.setInt(indiceParametro, offset);
 
             ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
 
@@ -58,19 +81,19 @@ public class UsoDAO implements IUsoDAO {
             return listaDeUsos;
 
         } catch (SQLException excepcionSQL) {
-            System.out.println("❌ Error al conectar a la base de datos para listar usos activos.");
-            System.out.println("Motivo del error: " + excepcionSQL.getMessage());
+            System.out.println("❌ Error al listar usos activos.");
             throw new PersistenciaException(excepcionSQL.getMessage());
         }
     }
 
     @Override
-    public List<UsoEntidad> listarApartadosDelDia(int limite, int offset) throws PersistenciaException {
+    public List<UsoEntidad> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws PersistenciaException {
         List<UsoEntidad> listaDeUsos = new ArrayList<>();
 
         try (Connection conexionAbierta = this.conexionBaseDatos.crearConexion()) {
+            boolean hayFiltro = filtroBusqueda != null && !filtroBusqueda.trim().isEmpty();
 
-            String sentenciaSQL = """
+            StringBuilder sentenciaSQL = new StringBuilder("""
                                SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
                                       Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
                                       Equipos.id AS idDelEquipo, Equipos.direccionIP 
@@ -78,13 +101,34 @@ public class UsoDAO implements IUsoDAO {
                                INNER JOIN Alumnos ON Usos.idAlumno = Alumnos.id 
                                INNER JOIN Equipos ON Usos.idEquipo = Equipos.id 
                                WHERE DATE(Usos.fechaHoraApartado) = CURDATE()
-                               LIMIT ? OFFSET ?;
-                              """;
+                               """);
+            if (hayFiltro) {
+                sentenciaSQL.append("""
+                    AND (Alumnos.nombres LIKE ? 
+                    OR Alumnos.apellidoPaterno LIKE ? 
+                    OR Alumnos.apellidoMaterno LIKE ? 
+                    OR Alumnos.id LIKE ? 
+                    OR Equipos.id LIKE ?) 
+               """);
+            }
 
-            PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL);
+            sentenciaSQL.append(" LIMIT ? OFFSET ?;");
 
-            sentenciaPreparada.setInt(1, limite);
-            sentenciaPreparada.setInt(2, offset);
+            PreparedStatement sentenciaPreparada = conexionAbierta.prepareStatement(sentenciaSQL.toString());
+
+            int indiceParametro = 1;
+
+            if (hayFiltro) {
+                String patron = "%" + filtroBusqueda.trim() + "%";
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+                sentenciaPreparada.setString(indiceParametro++, patron);
+            }
+
+            sentenciaPreparada.setInt(indiceParametro++, limite);
+            sentenciaPreparada.setInt(indiceParametro, offset);
 
             ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
 

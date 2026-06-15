@@ -22,7 +22,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
 
     private IUsoNegocio conexionNegocio;
     private Timer temporizadorActualizacion;
-
+    private String textoBusquedaActual = "";
     private int paginaActual = 1;
     private final int LIMITE_POR_PAGINA = 5;
 
@@ -41,8 +41,6 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
     public FrmAdministracionApartados() {
         initComponents();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -266,6 +264,15 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
+        textoBusquedaActual = TxtBuscador.getText().trim();
+
+        if (textoBusquedaActual.equals("Buscar...") || textoBusquedaActual.isEmpty()) {
+            textoBusquedaActual = "";
+        }
+
+        paginaActual = 1;
+
+        cargarTablaApartadosDelDia();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
@@ -298,7 +305,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
         modeloTabla.setRowCount(0);
 
         try {
-            List<dto.ApartadoDTO> listaApartados = conexionNegocio.listarApartadosDelDia(LIMITE_POR_PAGINA, offset);
+            List<dto.ApartadoDTO> listaApartados = conexionNegocio.listarApartadosDelDia(LIMITE_POR_PAGINA, offset, textoBusquedaActual);
 
             DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 

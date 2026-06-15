@@ -4,7 +4,6 @@
  */
 package presentacion;
 
-import entidad.UsoEntidad;
 import negocio.IUsoNegocio;
 import negocio.NegocioException;
 import java.util.List;
@@ -25,6 +24,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private IUsoNegocio conexionNegocio;
     private Timer temporizadorActualizacion;
+    private String textoBusquedaActual = "";
 
     private int paginaActual = 1;
     private final int LIMITE_POR_PAGINA = 5;
@@ -42,8 +42,6 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     public FrmAdministracionUsos() {
         initComponents();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -268,6 +266,14 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
+        textoBusquedaActual = TxtBuscador.getText().trim();
+
+        if (textoBusquedaActual.equals("Buscar...") || textoBusquedaActual.isEmpty()) {
+            textoBusquedaActual = "";
+        }
+
+        paginaActual = 1; 
+        cargarTablaUsosActivos(); 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
@@ -283,6 +289,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (paginaActual > 1) {
+            paginaActual--;
             cargarTablaUsosActivos();
         }
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -308,7 +315,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
         int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
 
         try {
-            List<dto.UsoDTO> listaUsos = conexionNegocio.listarUsosActivos(LIMITE_POR_PAGINA, offset);
+            List<dto.UsoDTO> listaUsos = conexionNegocio.listarUsosActivos(LIMITE_POR_PAGINA, offset, textoBusquedaActual);
 
             DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
 
