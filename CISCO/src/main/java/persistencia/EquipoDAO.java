@@ -215,44 +215,61 @@ public class EquipoDAO implements IEquipoDAO {
 
     @Override
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
-     
 
+        String sql = "SELECT "
+                + "    e.numero AS numero_equipo, "
+                + "    l.nombre AS laboratorio, "
+                + "    IF(a.id IS NOT NULL, 'Apartado', 'Disponible') AS estado_equipo, "
+                + "    a.id AS id_alumno, "
+                + "    a.nombres, "
+                + "    a.apellidoPaterno, "
+                + "    a.apellidoMaterno "
+                + "FROM Equipos e "
+                + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
+                + "LEFT JOIN Usos u ON e.id = u.idEquipo "
+                + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
+                + "WHERE e.direccionIP = ? "
+                + "ORDER BY u.id DESC LIMIT 1;";
 
-    try (Connection con = this.conexion.crearConexion();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-        
-        ps.setString(1, IP);
-        
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                int numeroVisual = rs.getInt("numero_visual");
-                String laboratorio = rs.getString("laboratorio");
-                String estado = rs.getString("estado_dinamico");
-                
-                AlumnoEntidad alumno = null;
-                
-                if (rs.getObject("id_alumno") != null) {
-                    alumno = new AlumnoEntidad();
-                    alumno.setId(rs.getInt("id_alumno"));
-                    
-                    String nombres = rs.getString("nombres");
-                    String apPaterno = rs.getString("apellidoPaterno");
-                    String apMaterno = rs.getString("apellidoMaterno");
-                    
-                    alumno.setNombres(nombres);
-                    alumno.setApellidoPaterno(apPaterno);
-                    alumno.setApellidoMaterno(apMaterno);
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, IP);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int numeroVisual = rs.getInt("numero_equipo");
+                    String laboratorio = rs.getString("laboratorio");
+                    String estado = rs.getString("estado_equipo");
+
+                    AlumnoEntidad alumno = null;
+
+                    if (rs.getObject("id_alumno") != null) {
+                        alumno = new AlumnoEntidad();
+                        alumno.setId(rs.getInt("id_alumno"));
+
+                        String nombres = rs.getString("nombres");
+                        String apPaterno = rs.getString("apellidoPaterno");
+                        String apMaterno = rs.getString("apellidoMaterno");
+
+                        alumno.setNombres(nombres);
+                        alumno.setApellidoPaterno(apPaterno);
+                        alumno.setApellidoMaterno(apMaterno);
+
+                        // Si tu modelo requiere setNombreCompleto para pintarlo en la etiqueta:
+                        alumno.setNombres(nombres);
+                        alumno.setApellidoPaterno(apPaterno);
+                        alumno.setApellidoMaterno(apMaterno);
+                    }
+
+                    // Enviamos el DTO limpio a la vista
+                    return new EstadoEquipoDTO(numeroVisual, laboratorio, estado, alumno);
                 }
-                
-                return new EstadoEquipoDTO(numeroVisual, laboratorio, estado, alumno);
             }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultar el estado del equipo por IP: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        throw new PersistenciaException("Error al consultar el estado del equipo por IP: " + e.getMessage());
+        return null;
     }
-    return null; 
-}
-
 
     @Override
     public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException {

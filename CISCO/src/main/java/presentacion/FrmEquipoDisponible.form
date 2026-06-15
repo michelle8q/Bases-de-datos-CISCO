@@ -301,7 +301,7 @@
                                   <Group type="102" attributes="0">
                                       <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="btnLiberarEquipo" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnLiberarEquipo" min="-2" pref="129" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="btnIngresar" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -395,12 +395,13 @@
             <Component class="javax.swing.JButton" name="btnLiberarEquipo">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="cc" type="rgb"/>
+                  <Color blue="ff" green="cc" red="66" type="rgb"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Cancelar apartado"/>
+                <Property name="text" type="java.lang.String" value="liberar equipo"/>
+                <Property name="actionCommand" type="java.lang.String" value=""/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLiberarEquipoActionPerformed"/>

@@ -210,9 +210,10 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Corbel", 1, 18)); // NOI18N
         jLabel4.setText("Verificando disponibilidad en:");
 
-        btnLiberarEquipo.setBackground(new java.awt.Color(204, 0, 0));
+        btnLiberarEquipo.setBackground(new java.awt.Color(102, 204, 255));
         btnLiberarEquipo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnLiberarEquipo.setText("Cancelar apartado");
+        btnLiberarEquipo.setText("liberar equipo");
+        btnLiberarEquipo.setActionCommand("");
         btnLiberarEquipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLiberarEquipoActionPerformed(evt);
@@ -234,7 +235,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                             .addGroup(pnlLoginLayout.createSequentialGroup()
                                 .addComponent(btnCancelar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnLiberarEquipo)
+                                .addComponent(btnLiberarEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnIngresar))
                             .addGroup(pnlLoginLayout.createSequentialGroup()
@@ -350,7 +351,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
 
                 btnLiberarEquipo.setVisible(true);
                 btnCancelar.setVisible(false);
-                btnLiberarEquipo.setVisible(false);
+                btnIngresar.setVisible(false);
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "La contraseña ingresada es incorrecta. Inténtelo de nuevo.",
@@ -367,7 +368,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                     "Error del Sistema",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -406,7 +407,35 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnLiberarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLiberarEquipoActionPerformed
-        // TODO add your handling code here:
+        if (this.estadoEquipoDTO == null || this.estadoEquipoDTO.getAlumno() == null) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error: No hay un apartado activo para liberar.",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            this.usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
+
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "El equipo se ha liberado correctamente y vuelve a estar disponible.",
+                    "Equipo Liberado",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            lblEstado.setText("Computadora disponible");
+            lblEstado.setForeground(new java.awt.Color(0, 153, 51)); // Cambia el texto a color verde
+
+            lblApartadoPor.setVisible(false);
+            lblNombreAlum.setVisible(false);
+            pnlLogin.setVisible(false); 
+
+        } catch (NegocioException e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error al liberar el equipo en la base de datos: " + e.getMessage(),
+                    "Error de Capas",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLiberarEquipoActionPerformed
 
 
