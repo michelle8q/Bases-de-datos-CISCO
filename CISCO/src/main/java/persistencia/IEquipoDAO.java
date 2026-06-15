@@ -1,5 +1,6 @@
 package persistencia;
 
+import dto.EstadoEquipoDTO;
 import entidad.EquipoEntidad;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface IEquipoDAO {
 
     public String obtenerLaboratorio(String IP) throws PersistenciaException;
 
-    public String obtenerEstado(String IP) throws PersistenciaException;
+    public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException;
 
     public int obtenerIDAlumnoApartado(String IP) throws PersistenciaException;
 

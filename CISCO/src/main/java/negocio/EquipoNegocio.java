@@ -1,10 +1,14 @@
 package negocio;
 
+
+import dto.EstadoEquipoDTO;
 import dto.ListarEquipoDTO;
 import entidad.EquipoEntidad;
 import java.util.ArrayList;
 import java.util.List;
 import persistencia.IEquipoDAO;
+import persistencia.PersistenciaException;
+
 
 /**
  *
@@ -73,4 +77,15 @@ public class EquipoNegocio implements IEquipoNegocio{
             throw new Exception("Error al cargar la lista de laboratorios: " + e.getMessage());
         }
     }
+
+
+    @Override
+    public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
+        try {
+            return equipoDAO.obtenerEstado(ip);
+        } catch (PersistenciaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+    }
+
 }

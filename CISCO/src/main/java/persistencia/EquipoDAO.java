@@ -214,7 +214,7 @@ public class EquipoDAO implements IEquipoDAO {
     }
 
     @Override
-    public String obtenerEstado(String IP) throws PersistenciaException {
+    public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
         String sql = "SELECT e.numero_equipo, e.laboratorio, e.estado, "
                 + "a.id_alumno, a.nombre, a.apellidoPaterno, a.apellidoMaterno "
                 +"FROM equipos e "
@@ -238,14 +238,16 @@ public class EquipoDAO implements IEquipoDAO {
                         alumno = new AlumnoEntidad();
                         alumno.setId(rs.getInt("id_alumno"));
                         alumno.setNombres(nombreAlumno);
-                        alumno.setApellidoPaterno(laboratorio);
+                        alumno.setApellidoPaterno("apellidoPaterno");
+                        alumno.setApellidoMaterno("apellidoMaterno");
                     }
 
                     return new EstadoEquipoDTO(numero, laboratorio, estadoEquipo, alumno);
                 }
             }
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al consultar la base de datos", e);
+            System.err.println("Error al contar equipos: " + e.getMessage());
+            throw new PersistenciaException("Error al contar los equipos para la paginación.");
         }
         return null;
     }
