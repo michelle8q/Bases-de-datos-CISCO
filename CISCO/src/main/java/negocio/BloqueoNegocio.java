@@ -104,7 +104,7 @@ public class BloqueoNegocio implements IBloqueoNegocio {
             
             this.validarListarBloqueados(filtro, limite, pagina);
 
-            List<BloqueoEntidad> bloqueos = this.bloqueoDAO.listarBloqueos(filtro, pagina, limite);
+            List<BloqueoEntidad> bloqueos = this.bloqueoDAO.listarBloqueos(filtro, limite, pagina);
             return bloqueos;
             
         } catch (PersistenciaException ex) {
@@ -113,7 +113,7 @@ public class BloqueoNegocio implements IBloqueoNegocio {
         }
     }
     
-     private void validarListarBloqueados(String filtro, int pagina, int limite) throws NegocioException {
+     private void validarListarBloqueados(String filtro, int limite, int pagina) throws NegocioException {
         if (pagina < 0) {
             throw new NegocioException("El número de página no puede ser negativo.");
         }
