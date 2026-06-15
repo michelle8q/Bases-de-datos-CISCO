@@ -6,11 +6,14 @@ package negocio;
 
 import dto.BloquearAlumnoDTO;
 import entidad.BloqueoEntidad;
+import java.util.List;
 
 /**
  *
  * @author cinca
  */
 public interface IBloqueoNegocio {
-    BloqueoEntidad guardar(BloquearAlumnoDTO bloqueo) throws NegocioException;
+    BloqueoEntidad bloquear(BloquearAlumnoDTO bloqueo) throws NegocioException;
+    BloqueoEntidad desbloquear(int id) throws NegocioException;
+    List<BloqueoEntidad> listarBloqueos(String filtro, int limite, int offset) throws NegocioException;
 }

@@ -15,18 +15,31 @@ public class BloqueoEntidad {
     private LocalDateTime fechaHoraInicio;
     private LocalDateTime fechaHoraFin;
     private String motivo;
+    private int idAlumno;
     private AlumnoEntidad alumno;
 
     public BloqueoEntidad() {
     }
 
-    public BloqueoEntidad(int id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String motivo, AlumnoEntidad alumno) {
+    public BloqueoEntidad(int id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String motivo, AlumnoEntidad alumno,
+                          int idAlumno) {
         this.id = id;
         this.fechaHoraInicio = fechaHoraInicio;
         this.fechaHoraFin = fechaHoraFin;
         this.motivo = motivo;
         this.alumno = alumno;
+        this.idAlumno = idAlumno;
     }
+
+    public BloqueoEntidad(int id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String motivo, int idAlumno) {
+        this.id = id;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
+        this.motivo = motivo;
+        this.idAlumno = idAlumno;
+    }
+    
+    
 
     public int getId() {
         return id;
@@ -66,6 +79,14 @@ public class BloqueoEntidad {
 
     public void setAlumno(AlumnoEntidad alumno) {
         this.alumno = alumno;
+    }
+
+    public int getIdAlumno() {
+        return idAlumno;
+    }
+
+    public void setIdAlumno(int idAlumno) {
+        this.idAlumno = idAlumno;
     }
     
     

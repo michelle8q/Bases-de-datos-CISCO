@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import utilerias.Utilidades;
 
 /**
  *
@@ -81,8 +83,8 @@ public class BloqueoDAO implements IBloqueoDAO {
                 rs.getInt("id"), 
                 rs.getTimestamp("fechaHoraInicio").toLocalDateTime(),
                 rs.getTimestamp("fechaHoraFin").toLocalDateTime(),
-                rs.getString("motivo"),  
-                alumno
+                rs.getString("motivo"),
+                rs.getInt("idAlumno")
                 
             );
         }
@@ -98,13 +100,80 @@ public class BloqueoDAO implements IBloqueoDAO {
     }
 
     @Override
-    public BloqueoEntidad desbloquearAlumno(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public BloqueoEntidad desbloquearAlumno(int id) throws PersistenciaException {
+       BloqueoEntidad bloqueoEliminado = buscarPorId(id);
+        
+        if (bloqueoEliminado == null) {
+            throw new PersistenciaException("No se puede eliminar: el bloqueo con id " + id + " no existe o ya fue eliminado.");
+        }
+
+        try (Connection conexion = this.conexion.crearConexion()) {
+                String sentenciaSQL = """
+                                      UPDATE bloqueos SET fechaHoraFin = NOW() WHERE id = ? AND fechaHoraFin IS NULL
+                                     """;
+
+        PreparedStatement statement = conexion.prepareStatement(sentenciaSQL);
+        statement.setInt(1, id);
+
+        statement.executeUpdate();
+        
+        return bloqueoEliminado;
+        
+        } catch (SQLException e) {
+            System.out.println("❌ Error al conectar a la base de datos.");
+            System.out.println("Motivo del error: " + e.getMessage());
+            throw new PersistenciaException(e.getMessage());
+        }
     }
 
     @Override
-    public List<BloqueoEntidad> listarBloqueos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<BloqueoEntidad> listarBloqueos(String filtro, int limite, int pagina) throws PersistenciaException {
+         List<BloqueoEntidad> listaDeBloqueos = new ArrayList<>();
+
+        try (Connection conexion = this.conexion.crearConexion()) {
+
+            String sentenciaSQL = """
+                               SELECT Bloqueos.id, Bloqueos.fechaHoraInicio, Bloqueos.motivo,
+                                      Alumnos.id AS idAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno   
+                               FROM Bloqueos 
+                               INNER JOIN Alumnos ON Bloqueos.idAlumno = Alumnos.id 
+                               WHERE Bloqueos.motivo LIKE ? OR Alumnos.nombres LIKE ? OR Alumnos.apellidoPaterno LIKE ? 
+                               OR Alumnos.apellidoMaterno LIKE ?
+                               LIMIT ? OFFSET ?;
+                              """;
+
+            PreparedStatement sentenciaPreparada = conexion.prepareStatement(sentenciaSQL);
+
+            String comodinBusqueda = "%" + filtro + "%";
+            sentenciaPreparada.setString(1, comodinBusqueda);
+            sentenciaPreparada.setString(2, comodinBusqueda);
+            sentenciaPreparada.setString(3, comodinBusqueda);
+            sentenciaPreparada.setString(4, comodinBusqueda);
+            
+            int offset = Utilidades.RegresarOFFSETMySQL(limite, pagina);
+
+            sentenciaPreparada.setInt(5, limite);
+            sentenciaPreparada.setInt(6, offset);
+
+            ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
+
+            while (resultadosConsulta.next()) {
+                listaDeBloqueos.add(new BloqueoEntidad(
+                    resultadosConsulta.getInt("id"),
+                    resultadosConsulta.getTimestamp("fechaHoraInicio").toLocalDateTime(),
+                    resultadosConsulta.getTimestamp(null).toLocalDateTime(),
+                    resultadosConsulta.getString("motivo"),
+                    resultadosConsulta.getInt("idAlumno")                  
+                ));
+            }
+
+            return listaDeBloqueos;
+
+        } catch (SQLException excepcionSQL) {
+            System.out.println("❌ Error al conectar a la base de datos para listar apartados del dia.");
+            System.out.println("Motivo del error: " + excepcionSQL.getMessage());
+            throw new PersistenciaException(excepcionSQL.getMessage());
+        }    
     }
     
     @Override

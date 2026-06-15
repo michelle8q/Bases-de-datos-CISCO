@@ -15,7 +15,7 @@ import java.util.List;
 public interface IBloqueoDAO {
     BloqueoEntidad bloquearAlumno(BloquearAlumnoDTO bloqueo) throws PersistenciaException;
     BloqueoEntidad buscarPorId(int id) throws PersistenciaException;
-    BloqueoEntidad desbloquearAlumno(int id);
-    List<BloqueoEntidad> listarBloqueos();
+    BloqueoEntidad desbloquearAlumno(int id) throws PersistenciaException;
+    List<BloqueoEntidad> listarBloqueos(String filtro, int limite, int offset) throws PersistenciaException;
     boolean BloqueoExistenteAlumno(int idAlumno)  throws PersistenciaException;
 }
