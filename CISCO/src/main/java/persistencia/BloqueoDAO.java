@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -39,14 +40,13 @@ public class BloqueoDAO implements IBloqueoDAO {
                                        VALUES (?,?,?,?);
                                      """;
 
-        PreparedStatement statement = conexion.prepareStatement(sentenciaSQL);
+        PreparedStatement statement = conexion.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS);
 
         statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
         statement.setNull(2, java.sql.Types.TIMESTAMP);
-        statement.setInt(3, bloqueo.getIdAlumno());
         statement.setString(4, bloqueo.getMotivo());
+        statement.setInt(3, bloqueo.getIdAlumno());
         
-
         statement.executeUpdate();
         
         ResultSet llavesGeneradas = statement.getGeneratedKeys();
@@ -155,15 +155,22 @@ public class BloqueoDAO implements IBloqueoDAO {
             sentenciaPreparada.setInt(5, limite);
             sentenciaPreparada.setInt(6, offset);
 
-            ResultSet resultadosConsulta = sentenciaPreparada.executeQuery();
+            ResultSet rs = sentenciaPreparada.executeQuery();
 
-            while (resultadosConsulta.next()) {
+            while (rs.next()) {
+                AlumnoEntidad alumno = new AlumnoEntidad(
+                   rs.getInt("idAlumno"),
+                   rs.getString("nombres"),
+                   rs.getString("apellidoPaterno"),
+                   rs.getString("apellidoMaterno")
+                );
+                
                 listaDeBloqueos.add(new BloqueoEntidad(
-                    resultadosConsulta.getInt("id"),
-                    resultadosConsulta.getTimestamp("fechaHoraInicio").toLocalDateTime(),
-                    resultadosConsulta.getTimestamp(null).toLocalDateTime(),
-                    resultadosConsulta.getString("motivo"),
-                    resultadosConsulta.getInt("idAlumno")                  
+                    rs.getInt("id"),
+                    rs.getTimestamp("fechaHoraInicio").toLocalDateTime(),
+                    rs.getTimestamp("fechaHoraFin").toLocalDateTime(),
+                    rs.getString("motivo"),
+                    rs.getInt("idAlumno")                  
                 ));
             }
 

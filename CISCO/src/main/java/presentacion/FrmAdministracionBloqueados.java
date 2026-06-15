@@ -4,11 +4,26 @@
  */
 package presentacion;
 
+
+import entidad.BloqueoEntidad;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import negocio.IBloqueoNegocio;
+import negocio.IUsoNegocio;
+import negocio.NegocioException;
+
 /**
  *
  * @author USUARIO
  */
 public class FrmAdministracionBloqueados extends javax.swing.JFrame {
+    
+    private IBloqueoNegocio bloqueoNegocio;
+    private IUsoNegocio usoNegocio;
+    private int paginaActual = 1;
+    private final int LIMITE_POR_PAGINA = 5;
 
     /**
      * Creates new form FrmAdministracionBloqueados
@@ -84,6 +99,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                 "ID alumno", "Nombre", "Fecha bloqueo", "Motivo", "Accion"
             }
         ));
+        TlbBloqueados.setRowHeight(35);
         jScrollPane1.setViewportView(TlbBloqueados);
 
         btnBloquear.setBackground(new java.awt.Color(153, 0, 0));
@@ -232,27 +248,35 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        // TODO add your handling code here:
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos();
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
-        // TODO add your handling code here:
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados();
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnApartadosActionPerformed
 
     private void btnBloquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquearActionPerformed
-        // TODO add your handling code here:
+       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno();
+       ventana.setVisible(true);
     }//GEN-LAST:event_btnBloquearActionPerformed
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
         // TODO add your handling code here:
+        paginaActual++;
+        cargarTablaBloqueosActivos();
     }//GEN-LAST:event_btnSiguinteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+         if (paginaActual > 1) {
+            cargarTablaBloqueosActivos();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
@@ -260,13 +284,52 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListasActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+       paginaActual = 1;
+       cargarTablaBloqueosActivos();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtBuscadorActionPerformed
+    
+     private void cargarTablaBloqueosActivos() {
+        int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
 
+        try {
+            String filtro = TxtBuscador.getText().trim();
+            List<BloqueoEntidad> listaBloqueos = bloqueoNegocio.listarBloqueos(TxtBuscador.getText(), LIMITE_POR_PAGINA, offset);
+
+            DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
+            modeloTabla.setRowCount(0);
+
+            DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            for (BloqueoEntidad bloqueo : listaBloqueos) {
+
+                String nombreCompleto = bloqueo.getAlumno().getNombres() + " "
+                        + bloqueo.getAlumno().getApellidoPaterno() + " "
+                        + bloqueo.getAlumno().getApellidoMaterno();
+
+                // Formateo de la hora de inicio a un texto 
+                String horaDeInicio = (bloqueo.getFechaHoraInicio() != null)
+                        ? bloqueo.getFechaHoraInicio().format(formatoFechaHora)
+                        : "Sin iniciar";
+
+                Object[] filaNueva = {
+                    bloqueo.getIdAlumno(), 
+                    nombreCompleto,
+                    horaDeInicio, 
+                    "Desbloquear"
+                };
+
+                modeloTabla.addRow(filaNueva);
+            }
+
+        } catch (NegocioException excepcionNegocio) {
+            JOptionPane.showMessageDialog(this, excepcionNegocio.getMessage(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+     
     /**
      * @param args the command line arguments
      */

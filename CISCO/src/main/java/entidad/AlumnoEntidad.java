@@ -31,6 +31,15 @@ public class AlumnoEntidad {
         this.carrera = carrera;
     }
 
+    public AlumnoEntidad(int id, String nombres, String apellidoPaterno, String apellidoMaterno) {
+        this.id = id;
+        this.nombres = nombres;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+    }
+    
+    
+
     public int getId() {
         return id;
     }
