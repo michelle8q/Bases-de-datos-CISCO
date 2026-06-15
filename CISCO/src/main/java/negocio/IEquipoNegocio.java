@@ -3,6 +3,7 @@ package negocio;
 import dto.EstadoEquipoDTO;
 import dto.ListarEquipoDTO;
 import dto.SoftwareDTO;
+import entidad.SoftwareEntidad;
 import java.util.List;
 
 /**
@@ -23,5 +24,6 @@ public interface IEquipoNegocio {
     List<String> obtenerNombresLaboratorios() throws Exception;
 
     List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception;
+    
 
 }

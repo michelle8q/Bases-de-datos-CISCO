@@ -90,14 +90,6 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
-    @Override
-    public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception {
-        try {
-            return equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
-        } catch (Exception e) {
-            throw new Exception("Error al obtener los softwares del equipo: " + e.getMessage());
-        }
-    }
 
     @Override
     public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception {

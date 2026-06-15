@@ -59,10 +59,10 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         pnlContenedorLogin = new javax.swing.JPanel();
         pnlLogin = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        txtContrasena = new javax.swing.JTextField();
         btnCancelar = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        JPassContrasena = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -177,8 +177,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Corbel", 0, 18)); // NOI18N
         jLabel5.setText("Ingresar contraseña: ");
 
-        txtContrasena.setText("");
-
+        btnCancelar.setBackground(new java.awt.Color(204, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCancelar.setText("Cancelar apartado");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -187,6 +186,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
             }
         });
 
+        btnIngresar.setBackground(new java.awt.Color(0, 153, 0));
         btnIngresar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnIngresar.setText("Ingresar");
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
@@ -216,9 +216,9 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                         .addGap(171, 171, 171))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLoginLayout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(48, 48, 48)
-                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(426, 426, 426))))
+                        .addGap(39, 39, 39)
+                        .addComponent(JPassContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(459, 459, 459))))
         );
         pnlLoginLayout.setVerticalGroup(
             pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -227,11 +227,11 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                     .addGroup(pnlLoginLayout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(31, 130, Short.MAX_VALUE))
+                            .addComponent(jLabel5)
+                            .addComponent(JPassContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLoginLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(119, Short.MAX_VALUE)
                         .addGroup(pnlLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCancelar)
                             .addComponent(btnIngresar))
@@ -294,15 +294,16 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
+        JPassContrasena.setText("");
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        JPassContrasena.setText("");
     }//GEN-LAST:event_btnCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField JPassContrasena;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JLabel jLabel2;
@@ -321,6 +322,5 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     private javax.swing.JLabel lblNumEquipo4;
     private javax.swing.JPanel pnlContenedorLogin;
     private javax.swing.JPanel pnlLogin;
-    private javax.swing.JTextField txtContrasena;
     // End of variables declaration//GEN-END:variables
 }
