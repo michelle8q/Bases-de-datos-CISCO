@@ -130,7 +130,6 @@ public class UsoNegocio implements IUsoNegocio {
             String estado = equipoDAO.obtenerEstado(ip);
             AlumnoEntidad alumno = alumnoDAO.buscarAlumnoPorId(id); 
 
-            // Retornamos el DTO limpio a la presentación
             return new EstadoEquipoDTO(id, ubicacion, estado, alumno);
 
         } catch (PersistenciaException e) {
