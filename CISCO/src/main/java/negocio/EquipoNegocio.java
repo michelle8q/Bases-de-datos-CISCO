@@ -90,24 +90,24 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
-
-    @Override
-    public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception {
-        try {
-            List<SoftwareEntidad> entidades = equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
-
-            List<SoftwareDTO> dtos = new ArrayList<>();
-            for (SoftwareEntidad entidad : entidades) {
-                SoftwareDTO dto = new SoftwareDTO();
-                dto.setId(entidad.getId());
-                dto.setNombre(entidad.getNombre());
-                dtos.add(dto);
-            }
-
-            return dtos;
-
-        } catch (Exception e) {
-            throw new Exception("Error al obtener los softwares del equipo: " + e.getMessage());
+    
+@Override
+public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws NegocioException {
+    try {
+        List<SoftwareEntidad> entidades = equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
+        List<SoftwareDTO> dtos = new ArrayList<>();
+        
+        for (SoftwareEntidad entidad : entidades) {
+            SoftwareDTO dto = new SoftwareDTO();
+            dto.setId(entidad.getId());
+            dto.setNombre(entidad.getNombre());
+            dtos.add(dto);
         }
+        return dtos;
+        
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error en el negocio al obtener softwares: " + e.getMessage());
     }
+}
+    
 }

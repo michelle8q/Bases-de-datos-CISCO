@@ -24,6 +24,7 @@ import presentacion.FrmAdministracionApartados;
 import presentacion.FrmAdministracionListaComputadoras;
 import presentacion.FrmAdministracionUsos;
 import presentacion.FrmEquipoDisponible;
+import presentacion.FrmEquipoSeleccion;
 import presentacion.FrmIngresoID;
 import utilerias.Utilidades;
 

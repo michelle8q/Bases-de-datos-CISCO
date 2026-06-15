@@ -50,25 +50,17 @@
                           <Component id="LblTitulo" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                                  <Component id="BtnAtras" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="359" max="-2" attributes="0"/>
-                                  <Component id="BtnSiguiente" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Component id="LblLista" min="-2" pref="525" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                                      <Component id="LblLista" min="-2" pref="525" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                                      <Component id="TxtBuacador" min="-2" pref="385" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                                  <Component id="TxtBuacador" min="-2" pref="385" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="35" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="38" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -98,12 +90,7 @@
                   <Component id="TxtBuacador" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                   <Component id="LblLista" min="-2" pref="174" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="BtnAtras" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="BtnSiguiente" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="34" max="32767" attributes="0"/>
+                  <EmptySpace pref="71" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="BtnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="BtnContunuar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -142,28 +129,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TxtBuacadorActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="BtnAtras">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Atras"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnAtrasActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="BtnBuscar1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Buscar"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnBuscar1ActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="BtnSiguiente">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Siguiente"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSiguienteActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="BtnCancelar">
