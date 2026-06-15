@@ -192,6 +192,26 @@ public class EquipoDAO implements IEquipoDAO {
             throw new PersistenciaException("Error al actualizar el estado del equipo.");
         }
     }
+    
+    @Override
+    public List<String> obtenerNombresLaboratorios() throws PersistenciaException {
+        List<String> laboratorios = new ArrayList<>();
+        String sql = "SELECT nombre FROM Laboratorios ORDER BY nombre ASC";
+        
+        try (Connection con = this.conexion.crearConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                laboratorios.add(rs.getString("nombre"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al consultar laboratorios: " + e.getMessage());
+            throw new PersistenciaException("Error al obtener la lista de laboratorios.");
+        }
+        return laboratorios;
+    }
 
     @Override
     public String obtenerEstado(String IP) throws PersistenciaException {

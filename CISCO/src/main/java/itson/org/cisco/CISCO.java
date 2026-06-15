@@ -3,7 +3,8 @@
  */
 package itson.org.cisco;
 
-import dto.EstadoEquipoDTO;
+import negocio.EquipoNegocio;
+import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.UsoNegocio;
 import persistencia.AlumnoDAO;
@@ -17,6 +18,7 @@ import persistencia.IUsoDAO;
 import persistencia.IpDAO;
 import persistencia.UsoDAO;
 import presentacion.FrmAdministracionApartados;
+import presentacion.FrmAdministracionListaComputadoras;
 import presentacion.FrmAdministracionUsos;
 import presentacion.FrmEquipoDisponible;
 import presentacion.FrmIngresoID;
@@ -33,19 +35,15 @@ public class CISCO {
         try {
             IConexionBD conexionBD = new ConexionBD();
 
-            IUsoDAO usoDAO = new UsoDAO(conexionBD);
-            IIpDAO ipDAO = new IpDAO(conexionBD);
-            IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
-            IAlumnoDAO alumnoDAO = new AlumnoDAO(conexionBD);
+        IEquipoDAO equipoDAO = new EquipoDAO(conexionBD);
+        IIpDAO ipDAO = new IpDAO(conexionBD);
+        IUsoDAO usoDAO = new UsoDAO(conexionBD);
 
-            IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO); //
-            String ipEquipo = Utilidades.obtenerDireccionIP();
-            String tipoPantalla = usoNegocio.determinarPantalla(ipEquipo);
+        IEquipoNegocio equipoNegocio = new EquipoNegocio(equipoDAO);
+        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO);
 
-            if (tipoPantalla.equals("Administrador")) {
-                new FrmAdministracionUsos(usoNegocio).setVisible(true);
-            } else if (tipoPantalla.equals("Alumno")) {
-                dto.EstadoEquipoDTO estadoEquipoDTO = usoNegocio.obtenerEstadoEquipo(ipEquipo);
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(usoNegocio, equipoNegocio);
+        ventana.setVisible(true);
 
                 FrmEquipoDisponible pantalla = new FrmEquipoDisponible(estadoEquipoDTO);
                 pantalla.setVisible(true);

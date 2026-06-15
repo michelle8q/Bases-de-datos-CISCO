@@ -4,17 +4,45 @@
  */
 package presentacion;
 
+import java.awt.event.ActionListener;
+import negocio.IEquipoNegocio;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import utilerias.ButtonEditor;
+import utilerias.ButtonRenderer;
+
 /**
  *
  * @author hp
  */
 public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
 
+    private IEquipoNegocio equipoNegocio;
+    private Timer temporizadorActualizacion;
+
+    private String textoBusquedaActual = "";
+    private String laboratorioActual = "Laboratorio";
+    private int paginaActual = 1;
+    private final int LIMITE_POR_PAGINA = 5;
+    private int totalPaginas = 1;
+    private List<dto.ListarEquipoDTO> listaActual;
+
     /**
      * Creates new form FrmAdministracionListaComputadoras
      */
-    public FrmAdministracionListaComputadoras() {
+    public FrmAdministracionListaComputadoras(IEquipoNegocio equipoNegocio) {
         initComponents();
+        this.equipoNegocio = equipoNegocio;
+
+        cargarComboBoxLaboratorios();
+
+        configurarTabla();
+        cargarTablaEquipos();
+        iniciarActualizacionAutomatica();
+
     }
 
     /**
@@ -101,6 +129,11 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
         });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laboratorio", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -239,6 +272,18 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
+        textoBusquedaActual = TxtBuscador.getText().trim();
+
+        if (textoBusquedaActual.equals("Buscar...") || textoBusquedaActual.isEmpty()) {
+            textoBusquedaActual = "";
+        }
+
+        if (jComboBox1.getSelectedItem() != null) {
+            laboratorioActual = jComboBox1.getSelectedItem().toString();
+        }
+
+        paginaActual = 1;
+        cargarTablaEquipos();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void TxtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtBuscadorActionPerformed
@@ -247,49 +292,139 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
 
     private void btnSiguinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguinteActionPerformed
         // TODO add your handling code here:
+        if (paginaActual < totalPaginas) {
+            paginaActual++;
+            cargarTablaEquipos();
+        }
     }//GEN-LAST:event_btnSiguinteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+        if (paginaActual > 1) {
+            paginaActual--;
+            cargarTablaEquipos();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnListasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListasActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_btnListasActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        if (jComboBox1.getSelectedItem() != null) {
+            laboratorioActual = jComboBox1.getSelectedItem().toString();
+            paginaActual = 1;
+            cargarTablaEquipos();
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionListaComputadoras.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void configurarTabla() {
+        TlbBloqueados.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmAdministracionListaComputadoras().setVisible(true);
+        TlbBloqueados.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JCheckBox(), () -> {
+            accionBotonTabla();
+        }));
+    }
+
+    private void cargarTablaEquipos() {
+        DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
+        modeloTabla.setRowCount(0);
+
+        try {
+            totalPaginas = equipoNegocio.obtenerTotalPaginas(laboratorioActual, textoBusquedaActual, LIMITE_POR_PAGINA);
+            if (totalPaginas == 0) {
+                totalPaginas = 1;
+            }
+
+            listaActual = equipoNegocio.buscarEquiposPaginados(laboratorioActual, textoBusquedaActual, LIMITE_POR_PAGINA, paginaActual);
+
+            for (dto.ListarEquipoDTO equipo : listaActual) {
+
+                String textoBoton = equipo.getEstado().equalsIgnoreCase("Disponible") ? "Deshabilitar" : "Habilitar";
+
+                Object[] filaNueva = {
+                    equipo.getNumeroComputadora(),
+                    equipo.getDireccionIP(),
+                    equipo.getEstado(),
+                    textoBoton
+                };
+
+                modeloTabla.addRow(filaNueva);
+            }
+
+            actualizarBotonesPaginacion();
+
+        } catch (Exception e) {
+            System.out.println("Aviso: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void accionBotonTabla() {
+        Integer fila = (Integer) TlbBloqueados.getClientProperty("filaSeleccionada");
+        cargarTablaEquipos();
+
+        if (fila != null && fila >= 0 && fila < listaActual.size()) {
+
+            dto.ListarEquipoDTO equipoSeleccionado = listaActual.get(fila);
+            int idEquipo = equipoSeleccionado.getId();
+
+            String nuevoEstado = equipoSeleccionado.getEstado().equalsIgnoreCase("Disponible") ? "Mantenimiento" : "Disponible";
+
+            try {
+                equipoNegocio.cambiarEstadoEquipo(idEquipo, nuevoEstado);
+
+                JOptionPane.showMessageDialog(this, "El estado del equipo se actualizó a: " + nuevoEstado, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarTablaEquipos();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            cargarTablaEquipos();
+
+        }
+    }
+
+    private void cargarComboBoxLaboratorios() {
+        try {
+            jComboBox1.removeAllItems();
+
+            List<String> laboratorios = equipoNegocio.obtenerNombresLaboratorios();
+
+            for (String lab : laboratorios) {
+                jComboBox1.addItem(lab);
+            }
+
+            if (jComboBox1.getItemCount() > 0) {
+                jComboBox1.setSelectedIndex(0);
+                laboratorioActual = jComboBox1.getSelectedItem().toString();
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los laboratorios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void actualizarBotonesPaginacion() {
+        btnAtras.setEnabled(paginaActual > 1);
+        btnSiguinte.setEnabled(paginaActual < totalPaginas);
+    }
+
+    private void iniciarActualizacionAutomatica() {
+        int intervalo = 30000;
+        temporizadorActualizacion = new Timer(intervalo, new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                cargarTablaEquipos();
+
             }
         });
+
+        temporizadorActualizacion.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
