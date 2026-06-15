@@ -3,6 +3,7 @@ package negocio;
 
 import dto.UsoDTO;
 import dto.ApartadoDTO;
+import dto.EstadoEquipoDTO;
 import java.util.List;
 
 /**
@@ -16,5 +17,8 @@ public interface IUsoNegocio {
     List<UsoDTO> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws NegocioException;
 
     List<ApartadoDTO> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws NegocioException;
+
+    
+    public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException;
 
 }

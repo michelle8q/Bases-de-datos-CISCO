@@ -1,26 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package negocio;
 
 import dto.ApartadoDTO;
+import dto.EstadoEquipoDTO;
 import dto.UsoDTO;
+import entidad.AlumnoEntidad;
 import entidad.UsoEntidad;
 import java.util.ArrayList;
 import persistencia.IUsoDAO;
 import persistencia.PersistenciaException;
 import java.util.List;
+import persistencia.IAlumnoDAO;
+import persistencia.IEquipoDAO;
 import persistencia.IIpDAO;
 
 /**
  *
- * @author luisf
+ * @author luisf piña
  */
 public class UsoNegocio implements IUsoNegocio {
 
     private IUsoDAO usoDAO;
     private IIpDAO ipDAO;
+    private IEquipoDAO equipoDAO;
+    private IAlumnoDAO alumnoDAO;
+    
 
     public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO) {
         this.usoDAO = usoDAO;
@@ -106,7 +110,7 @@ public class UsoNegocio implements IUsoNegocio {
             String pantalla = ipDAO.obtenerPantallaPorIP(ip);
 
             if (pantalla == null) {
-                return "SI_ACCESO"; 
+                return "SI_ACCESO";
             }
 
             return pantalla;
@@ -114,6 +118,25 @@ public class UsoNegocio implements IUsoNegocio {
         } catch (PersistenciaException e) {
             System.err.println("Error en Negocio al determinar la pantalla para la IP: " + ip);
             throw new NegocioException("No se pudo validar la IP en el sistema: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
+        try {
+            // El DAO puede devolverte un objeto o un ResultSet con los datos unidos (Equipo + Alumno)
+            // Aquí simulamos que recuperas la información y la conviertes a DTO:
+
+            int id = equipoDAO.obtenerIDAlumnoApartado(ip);
+            String ubicacion = equipoDAO.obtenerLaboratorio(ip);
+            String estado = equipoDAO.obtenerEstado(ip);
+            AlumnoEntidad alumno = alumnoDAO.buscarAlumnoPorId(id); 
+
+            // Retornamos el DTO limpio a la presentación
+            return new EstadoEquipoDTO(id, ubicacion, estado, alumno.getNombres());
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al procesar el estado del equipo: " + e.getMessage());
         }
     }
 

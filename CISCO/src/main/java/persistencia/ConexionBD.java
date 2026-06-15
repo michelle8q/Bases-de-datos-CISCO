@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package persistencia;
 
 import java.sql.Connection;
@@ -17,7 +14,7 @@ public class ConexionBD implements IConexionBD {
     final String BASE_DATOS = "Cisco";
     private final String CADENA_CONEXION = "jdbc:mysql://" + SERVER + "/" + BASE_DATOS;
     final String USUARIO = "root";
-    final String CONTRASEÑA = "";
+    final String CONTRASEÑA = "Nolaolvides123!";
     
     @Override
     public Connection crearConexion() throws SQLException {
