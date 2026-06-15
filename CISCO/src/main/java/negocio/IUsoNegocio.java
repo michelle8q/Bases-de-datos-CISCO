@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package negocio;
 
 import dto.UsoDTO;
@@ -10,9 +7,11 @@ import java.util.List;
 
 /**
  *
- * @author luisf
+ * @author luisf piña
  */
 public interface IUsoNegocio {
+    
+    public String determinarPantalla(String ip) throws NegocioException;
 
     List<UsoDTO> listarUsosActivos(int limite, int offset) throws NegocioException;
 

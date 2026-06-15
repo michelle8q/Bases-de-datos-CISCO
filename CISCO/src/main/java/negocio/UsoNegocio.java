@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import persistencia.IUsoDAO;
 import persistencia.PersistenciaException;
 import java.util.List;
+import persistencia.IIpDAO;
 
 /**
  *
@@ -19,9 +20,11 @@ import java.util.List;
 public class UsoNegocio implements IUsoNegocio {
 
     private IUsoDAO usoDAO;
+    private IIpDAO ipDAO;
 
-    public UsoNegocio(IUsoDAO usoDAO) {
+    public UsoNegocio(IUsoDAO usoDAO, IIpDAO ipDAO) {
         this.usoDAO = usoDAO;
+        this.ipDAO = ipDAO;
     }
 
     @Override
@@ -94,6 +97,23 @@ public class UsoNegocio implements IUsoNegocio {
             return listaDTOs;
         } catch (PersistenciaException e) {
             throw new NegocioException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String determinarPantalla(String ip) throws NegocioException {
+        try {
+            String pantalla = ipDAO.obtenerPantallaPorIP(ip);
+
+            if (pantalla == null) {
+                return "SI_ACCESO"; 
+            }
+
+            return pantalla;
+
+        } catch (PersistenciaException e) {
+            System.err.println("Error en Negocio al determinar la pantalla para la IP: " + ip);
+            throw new NegocioException("No se pudo validar la IP en el sistema: " + e.getMessage());
         }
     }
 
