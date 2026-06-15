@@ -13,8 +13,7 @@ import java.util.List;
 public class EquipoEntidad {
     private int id;
     private String direccionIP;
-    private Boolean esActivo;
-    private Boolean esInactivo;
+    private String estado;
     private String tipo;
     private LaboratorioEntidad laboratorio;
     private List<SoftwareEntidad> softwares;
@@ -22,13 +21,12 @@ public class EquipoEntidad {
     public EquipoEntidad() {
     }
 
-    public EquipoEntidad(int id, String direccionIP, Boolean esActivo, Boolean esInactivo, 
+    public EquipoEntidad(int id, String direccionIP, String estado, 
             String tipo, LaboratorioEntidad laboratorio,  List<SoftwareEntidad> softwares) {
         
         this.id = id;
         this.direccionIP = direccionIP;
-        this.esActivo = esActivo;
-        this.esInactivo = esInactivo;
+        this.estado = estado;
         this.tipo = tipo;
         this.laboratorio = laboratorio;
         this.softwares = softwares;
@@ -50,21 +48,14 @@ public class EquipoEntidad {
         this.direccionIP = direccionIP;
     }
 
-    public Boolean getEsActivo() {
-        return esActivo;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setEsActivo(Boolean esActivo) {
-        this.esActivo = esActivo;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
-    public Boolean getEsInactivo() {
-        return esInactivo;
-    }
-
-    public void setEsInactivo(Boolean esInactivo) {
-        this.esInactivo = esInactivo;
-    }
 
     public String getTipo() {
         return tipo;
