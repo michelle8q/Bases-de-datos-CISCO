@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import negocio.IBloqueoNegocio;
+import negocio.IUsoNegocio;
 import utilerias.ButtonEditor;
 import utilerias.ButtonRenderer;
 
@@ -19,7 +21,9 @@ import utilerias.ButtonRenderer;
  * @author hp
  */
 public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
-
+    
+    private IUsoNegocio usoNegocio;
+    private IBloqueoNegocio bloqueoNegocio;
     private IEquipoNegocio equipoNegocio;
     private Timer temporizadorActualizacion;
 
@@ -259,15 +263,21 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBloquadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBloquadosActionPerformed
-        // TODO add your handling code here:
+       FrmBloqueoAlumno ventana = new FrmBloqueoAlumno(this.bloqueoNegocio);
+       ventana.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_btnBloquadosActionPerformed
 
     private void btnUsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsoActionPerformed
-        // TODO add your handling code here:
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.usoNegocio, this.equipoNegocio);
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
-        // TODO add your handling code here:
+        FrmAdministracionUsos ventana = new FrmAdministracionUsos(this.usoNegocio, this.equipoNegocio);
+        ventana.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
