@@ -216,35 +216,7 @@ public class EquipoDAO implements IEquipoDAO {
     @Override
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
      
-        String sql = "SELECT "
-                + "    e.numero AS numero_equipo, "
-                + "    l.nombre AS laboratorio, "
-                + "    e.estado, "
-                + "    a.id AS id_alumno, "
-                + "    a.nombres, "
-                + "    a.apellidoPaterno, "
-                + "    a.apellidoMaterno "
-                + "FROM Equipos e "
-                + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
-                + "LEFT JOIN Usos u ON e.id = u.idEquipo "
-                + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
-                + "WHERE e.direccionIP = ? "
-                + "ORDER BY u.id DESC LIMIT 1;";
 
-    String sql = "SELECT "
-               + "    e.numero AS numero_visual, " 
-               + "    l.nombre AS laboratorio, "
-               + "    IF(a.id IS NOT NULL, 'Apartado', 'Disponible') AS estado_dinamico, "
-               + "    a.id AS id_alumno, "
-               + "    a.nombres, "
-               + "    a.apellidoPaterno, "
-               + "    a.apellidoMaterno "
-               + "FROM Equipos e "
-               + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
-               + "LEFT JOIN usos u ON e.id = u.idEquipo " 
-               + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
-               + "WHERE e.direccionIP = ? "
-               + "ORDER BY u.fechaHoraApartado DESC LIMIT 1;"; 
 
     try (Connection con = this.conexion.crearConexion();
          PreparedStatement ps = con.prepareStatement(sql)) {

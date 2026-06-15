@@ -9,5 +9,5 @@ import entidad.AlumnoEntidad;
  */
 public interface IAlumnoDAO {
     AlumnoEntidad buscarAlumnoPorId(int id) throws PersistenciaException;
-    
+    boolean validarContrasena(int idAlumno, String contrasena) throws PersistenciaException;
 }
