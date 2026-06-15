@@ -133,24 +133,26 @@ public class BloqueoDAO implements IBloqueoDAO {
         try (Connection conexion = this.conexion.crearConexion()) {
 
             String sentenciaSQL = """
-                               SELECT Bloqueos.id, Bloqueos.fechaHoraInicio, Bloqueos.motivo,
+                               SELECT Bloqueos.id, Bloqueos.fechaHoraInicio, Bloqueos.fechaHoraFin, Bloqueos.motivo,
                                       Alumnos.id AS idAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno   
                                FROM Bloqueos 
-                               INNER JOIN Alumnos ON Bloqueos.idAlumno = Alumnos.id 
-                               WHERE Bloqueos.motivo LIKE ? OR Alumnos.nombres LIKE ? OR Alumnos.apellidoPaterno LIKE ? 
-                               OR Alumnos.apellidoMaterno LIKE ?
-                               LIMIT ? OFFSET ?;
+                               INNER JOIN Alumnos ON Bloqueos.idAlumno = Alumnos.id WHERE Bloqueos.motivo LIKE ?
+                                  OR Alumnos.nombres LIKE ? OR Alumnos.apellidoPaterno LIKE ? OR Alumnos.apellidoMaterno LIKE ?
+                               LIMIT ? OFFSET ?
                               """;
-
-            PreparedStatement sentenciaPreparada = conexion.prepareStatement(sentenciaSQL);
-
-            String comodinBusqueda = "%" + filtro + "%";
-            sentenciaPreparada.setString(1, comodinBusqueda);
-            sentenciaPreparada.setString(2, comodinBusqueda);
-            sentenciaPreparada.setString(3, comodinBusqueda);
-            sentenciaPreparada.setString(4, comodinBusqueda);
             
+          
+           PreparedStatement sentenciaPreparada = conexion.prepareStatement(sentenciaSQL);
             int offset = Utilidades.RegresarOFFSETMySQL(limite, pagina);
+            
+           String comodinBusqueda = "%" + filtro + "%";
+
+           sentenciaPreparada.setString(1, comodinBusqueda);
+           sentenciaPreparada.setString(2, comodinBusqueda);
+           sentenciaPreparada.setString(3, comodinBusqueda);
+           sentenciaPreparada.setString(4, comodinBusqueda);
+            
+           
 
             sentenciaPreparada.setInt(5, limite);
             sentenciaPreparada.setInt(6, offset);
@@ -165,12 +167,17 @@ public class BloqueoDAO implements IBloqueoDAO {
                    rs.getString("apellidoMaterno")
                 );
                 
+                LocalDateTime fechaHoraFin = null;
+                if(rs.getTimestamp("fechaHoraFin") != null)
+                   fechaHoraFin = rs.getTimestamp("fechaHoraFin").toLocalDateTime();
+                
                 listaDeBloqueos.add(new BloqueoEntidad(
                     rs.getInt("id"),
                     rs.getTimestamp("fechaHoraInicio").toLocalDateTime(),
-                    rs.getTimestamp("fechaHoraFin").toLocalDateTime(),
+                    fechaHoraFin,
                     rs.getString("motivo"),
-                    rs.getInt("idAlumno")                  
+                    rs.getInt("idAlumno"),
+                     alumno
                 ));
             }
 

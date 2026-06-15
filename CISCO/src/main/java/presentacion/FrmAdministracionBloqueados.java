@@ -6,13 +6,16 @@ package presentacion;
 
 
 import entidad.BloqueoEntidad;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import negocio.IBloqueoNegocio;
-import negocio.IUsoNegocio;
 import negocio.NegocioException;
+import presentacion.PresentacionException;
 
 /**
  *
@@ -21,16 +24,25 @@ import negocio.NegocioException;
 public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     
     private IBloqueoNegocio bloqueoNegocio;
-    private IUsoNegocio usoNegocio;
     private int paginaActual = 1;
+    private Timer temporizadorActualizacion;
     private final int LIMITE_POR_PAGINA = 5;
 
     /**
      * Creates new form FrmAdministracionBloqueados
      */
+    public FrmAdministracionBloqueados(IBloqueoNegocio bloqueoNegocio) {
+        initComponents();
+        this.bloqueoNegocio = bloqueoNegocio;
+        cargarTablaBloqueosActivos();
+        iniciarActualizacionAutomatica();
+    }
+
     public FrmAdministracionBloqueados() {
         initComponents();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +111,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                 "ID alumno", "Nombre", "Fecha bloqueo", "Motivo", "Accion"
             }
         ));
-        TlbBloqueados.setRowHeight(35);
+        TlbBloqueados.setRowHeight(40);
         jScrollPane1.setViewportView(TlbBloqueados);
 
         btnBloquear.setBackground(new java.awt.Color(153, 0, 0));
@@ -117,7 +129,6 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             }
         });
 
-        TxtBuscador.setText("Buscar Alumno...");
         TxtBuscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TxtBuscadorActionPerformed(evt);
@@ -131,9 +142,9 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(LblTituloTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnBloquear, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -146,11 +157,12 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LblTituloTabla)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(LblTituloTabla)
+                        .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnBloquear)
-                        .addComponent(btnBuscar)
-                        .addComponent(TxtBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnBuscar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                 .addContainerGap())
@@ -275,6 +287,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
          if (paginaActual > 1) {
+             paginaActual--;
             cargarTablaBloqueosActivos();
         }
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -292,20 +305,36 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtBuscadorActionPerformed
     
-     private void cargarTablaBloqueosActivos() {
-        int offset = (paginaActual - 1) * LIMITE_POR_PAGINA;
+    private void iniciarActualizacionAutomatica() {
+        int intervalo = 30000;
 
+        temporizadorActualizacion = new Timer(intervalo, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cargarTablaBloqueosActivos();
+            }
+        });
+
+        temporizadorActualizacion.start();
+    }
+        
+    private void cargarTablaBloqueosActivos() {
         try {
-            String filtro = TxtBuscador.getText().trim();
-            List<BloqueoEntidad> listaBloqueos = bloqueoNegocio.listarBloqueos(TxtBuscador.getText(), LIMITE_POR_PAGINA, offset);
-
+            
+            String filtro = obtenerFiltroBusqueda();
+            validarFiltroBusqueda(filtro);
+            int pagina = Math.max(0, paginaActual - 1);
+           
+            List<BloqueoEntidad> listaBloqueos = bloqueoNegocio.listarBloqueos(filtro, LIMITE_POR_PAGINA, pagina);
+            
+            System.out.println("TAMAÑO LISTA: " + listaBloqueos.size());
             DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
             modeloTabla.setRowCount(0);
 
             DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             for (BloqueoEntidad bloqueo : listaBloqueos) {
-
+            
                 String nombreCompleto = bloqueo.getAlumno().getNombres() + " "
                         + bloqueo.getAlumno().getApellidoPaterno() + " "
                         + bloqueo.getAlumno().getApellidoMaterno();
@@ -319,51 +348,46 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                     bloqueo.getIdAlumno(), 
                     nombreCompleto,
                     horaDeInicio, 
+                    bloqueo.getMotivo(),
                     "Desbloquear"
                 };
 
                 modeloTabla.addRow(filaNueva);
             }
 
-        } catch (NegocioException excepcionNegocio) {
-            JOptionPane.showMessageDialog(this, excepcionNegocio.getMessage(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NegocioException e) {   
+            JOptionPane.showMessageDialog(this, e.getMessage()); 
+       
+        } catch (PresentacionException e) {   
+            JOptionPane.showMessageDialog(this, e.getMessage()); 
         }
     }
      
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAdministracionBloqueados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private String obtenerFiltroBusqueda() {
+        String texto = TxtBuscador.getText();
+        
+        if (texto == null) {
+            texto = "";
         }
-        //</editor-fold>
+        texto = texto.trim();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmAdministracionBloqueados().setVisible(true);
-            }
-        });
+        if (texto.equalsIgnoreCase("Buscar Alumno...")) {
+            return "";
+        }
+
+        return texto;
+   }
+    
+    private void validarFiltroBusqueda(String filtro) throws PresentacionException {
+        if (filtro.length() > 100) {
+            throw new PresentacionException("El filtro de búsqueda no puede exceder los 100 caracteres.");
+        }
     }
+
+    private boolean filtroBusquedaEstaVacio(String filtro) {
+        return filtro == null || filtro.isEmpty();
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblTitulo;

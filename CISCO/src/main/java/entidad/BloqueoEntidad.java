@@ -21,6 +21,17 @@ public class BloqueoEntidad {
     public BloqueoEntidad() {
     }
 
+    public BloqueoEntidad(int id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String motivo, int idAlumno, AlumnoEntidad alumno) {
+        this.id = id;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
+        this.motivo = motivo;
+        this.idAlumno = idAlumno;
+        this.alumno = alumno;
+    }
+    
+    
+
     public BloqueoEntidad(int id, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String motivo, AlumnoEntidad alumno) {
         this.id = id;
         this.fechaHoraInicio = fechaHoraInicio;
