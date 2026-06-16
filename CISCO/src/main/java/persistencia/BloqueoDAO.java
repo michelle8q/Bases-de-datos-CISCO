@@ -151,6 +151,7 @@ public class BloqueoDAO implements IBloqueoDAO {
                                     OR Alumnos.nombres LIKE ? 
                                     OR Alumnos.apellidoPaterno LIKE ? 
                                     OR Alumnos.apellidoMaterno LIKE ?
+                                    OR CAST(Alumnos.id AS CHAR) LIKE ?
                                   )
                                LIMIT ? OFFSET ?
                               """;
@@ -165,11 +166,12 @@ public class BloqueoDAO implements IBloqueoDAO {
            sentenciaPreparada.setString(2, comodinBusqueda);
            sentenciaPreparada.setString(3, comodinBusqueda);
            sentenciaPreparada.setString(4, comodinBusqueda);
+           sentenciaPreparada.setString(5, comodinBusqueda);
             
            
 
-            sentenciaPreparada.setInt(5, limite);
-            sentenciaPreparada.setInt(6, offset);
+            sentenciaPreparada.setInt(6, limite);
+            sentenciaPreparada.setInt(7, offset);
 
             ResultSet rs = sentenciaPreparada.executeQuery();
 
