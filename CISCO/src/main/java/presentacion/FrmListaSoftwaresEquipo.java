@@ -11,6 +11,7 @@ import entidad.AlumnoEntidad;
 import negocio.IEquipoNegocio;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import negocio.AlumnoNegocio;
 import negocio.EquipoNegocio;
 import negocio.IAlumnoNegocio;
@@ -34,6 +35,9 @@ import persistencia.UsoDAO;
 public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
 
     private IEquipoNegocio equipoNegocio;
+    private IUsoNegocio usoNegocio;
+    private IAlumnoNegocio alumnoNegocio;
+    private AlumnoEntidad alumnoActual;
     private int idEquipo;
     private int numeroEquipo;
     private List<SoftwareDTO> todosSoftwares;
@@ -42,19 +46,17 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
      * Creates new form FrmListaSoftwaresEquipo
      */
     public FrmListaSoftwaresEquipo(IEquipoNegocio equipoNegocio,
+            IUsoNegocio usoNegocio,
+            AlumnoEntidad alumnoActual,
             int idEquipo,
             int numeroEquipo) {
         this.equipoNegocio = equipoNegocio;
+        this.usoNegocio = usoNegocio;
+        this.alumnoActual = alumnoActual;
         this.idEquipo = idEquipo;
         this.numeroEquipo = numeroEquipo;
-
-        // 2. ¡MUY IMPORTANTE! Creas la pantalla visual y todos sus elementos (botones, etiquetas)
         initComponents();
-
-        // 3. Modificas el título para que muestre el número de equipo real
         this.LblTitulo.setText("Softwares Instalados en el equipo " + numeroEquipo + ":");
-
-        // 4. Ahora sí, buscas y cargas los softwares en la etiqueta que ya existe
         cargarSoftwares();
     }
 
@@ -203,20 +205,13 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnBuscar1ActionPerformed
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
-        IConexionBD conexion = new ConexionBD();
-        IUsoDAO usoDAO = new UsoDAO(conexion);
-        IIpDAO ipDAO = new IpDAO(conexion);
-        IEquipoDAO equipoDAO = new EquipoDAO(conexion);
-        IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
-        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
         FrmEquipoSeleccion pantalla = new FrmEquipoSeleccion(
                 equipoNegocio,
                 usoNegocio,
-                new AlumnoEntidad(),
+                alumnoActual,
                 "Cisco"
         );
         pantalla.setVisible(true);
-        this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_BtnCancelarActionPerformed
 
@@ -230,25 +225,23 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
             DlgApartadoConfirmacion.Resultado resultado = dlg.mostrar();
 
             if (resultado == DlgApartadoConfirmacion.Resultado.OK) {
-                equipoNegocio.cambiarEstadoEquipo(idEquipo, "Apartado");
-                javax.swing.JOptionPane.showMessageDialog(this,
+                usoNegocio.registrarApartado(idEquipo, alumnoActual.getId());
+
+                JOptionPane.showMessageDialog(this,
                         "Equipo " + numeroEquipo + " apartado exitosamente.",
-                        "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                IConexionBD conexion = new ConexionBD();
-                IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
-                IEquipoDAO equipoDAO = new EquipoDAO(conexion);
-                IAlumnoNegocio alumnoNeg = new AlumnoNegocio(alumnoDAO);
-                IEquipoNegocio equipoNeg = new EquipoNegocio(equipoDAO);
-                FrmIngresoID frm = new FrmIngresoID(alumnoNeg, equipoNeg);
+                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                FrmIngresoID frm = new FrmIngresoID(alumnoNegocio, equipoNegocio, usoNegocio);
                 frm.setVisible(true);
                 this.dispose();
             }
 
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(this,
                     "Error al apartar equipo: " + ex.getMessage(),
-                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_BtnContunuarActionPerformed
     private void cargarSoftwares() {
         try {

@@ -62,14 +62,16 @@ public class CISCO {
                 EstadoEquipoDTO estadoEquipoDTO = equipoNegocio.obtenerEstadoEquipo(ipEquipo);
 
                 if (estadoEquipoDTO != null) {
-                    new FrmEquipoDisponible(estadoEquipoDTO, usoNegocio, alumnoNegocio, ipEquipo).setVisible(true);
+                    new FrmEquipoDisponible(estadoEquipoDTO, usoNegocio, alumnoNegocio, equipoNegocio, ipEquipo).setVisible(true);
+
                 } else {
                     System.err.println("Error: Esta máquina tiene rol de Alumno pero su IP no está registrada.");
                     System.exit(0);
                 }
 
             } else if (tipoPantalla.equals("Apartados")) {
-                new FrmIngresoID(alumnoNegocio, equipoNegocio).setVisible(true);
+                new FrmIngresoID(alumnoNegocio, equipoNegocio, usoNegocio).setVisible(true);
+
             } else {
                 System.err.println("No tienes acceso");
                 System.exit(0);

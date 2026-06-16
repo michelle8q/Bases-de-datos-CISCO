@@ -23,4 +23,7 @@ public interface IUsoNegocio {
    void finalizarSesionEquipo(String ip) throws NegocioException;
    
    void iniciarSesionEquipo(String ip) throws NegocioException;
+   
+   void registrarApartado(int idEquipo, int idAlumno) throws NegocioException;
+
 }

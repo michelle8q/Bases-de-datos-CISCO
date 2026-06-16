@@ -2,6 +2,7 @@ package presentacion;
 
 import dto.EstadoEquipoDTO;
 import negocio.IAlumnoNegocio;
+import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.NegocioException;
 
@@ -13,42 +14,57 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
 
     private final IUsoNegocio usoNegocio;
     private final IAlumnoNegocio alumnoNegocio;
-    private final String ipEquipo;
-    private final EstadoEquipoDTO estadoEquipoDTO;
+    private final IEquipoNegocio equipoNegocio;
+    private String ipEquipo;
+    private EstadoEquipoDTO estadoEquipoDTO;
 
-    public FrmEquipoDisponible(EstadoEquipoDTO dto, IUsoNegocio usoNegocio, IAlumnoNegocio alumnoNegocio, String ipEquipo) {
+    public FrmEquipoDisponible(EstadoEquipoDTO dto, IUsoNegocio usoNegocio, IAlumnoNegocio alumnoNegocio, IEquipoNegocio equipoNegocio, String ipEquipo) {
+
         initComponents();
         btnLiberarEquipo.setVisible(false);
         this.estadoEquipoDTO = dto;
         this.usoNegocio = usoNegocio;
         this.alumnoNegocio = alumnoNegocio;
         this.ipEquipo = ipEquipo;
-
+        this.equipoNegocio = equipoNegocio;
+        cargarEquiposEnComboBox();
         configurarPantalla(dto);
         this.setLocationRelativeTo(null);
     }
 
     private void configurarPantalla(EstadoEquipoDTO dto) {
-        lblLaboratorio.setText(dto.getLaboratorio());
-        lblNumEquipo.setText(String.valueOf(dto.getNumero()));
+        if (dto == null) {
+        return;
+    }
 
-        if (dto.getEstado().equalsIgnoreCase("Disponible")) {
-            lblEstado.setText("Computadora disponible");
-            lblEstado.setForeground(new java.awt.Color(0, 153, 51));
-            lblApartadoPor.setVisible(false);
-            lblNombreAlum.setVisible(false);
+    lblLaboratorio.setText(dto.getLaboratorio());
+    lblNumEquipo.setText(String.valueOf(dto.getNumero()));
 
-            pnlLogin.setVisible(false);
+    JPassContrasena.setText("");
+    btnLiberarEquipo.setVisible(false);
 
-        } else if (dto.getEstado().equalsIgnoreCase("Apartado")) {
-            lblEstado.setText("Computadora apartada");
-            lblEstado.setForeground(new java.awt.Color(204, 102, 0));
-            lblApartadoPor.setVisible(true);
-            lblNombreAlum.setVisible(true);
+    if (dto.getEstado().equalsIgnoreCase("Disponible")) {
+        lblEstado.setText("Computadora disponible");
+        lblEstado.setForeground(new java.awt.Color(0, 153, 51));
+        lblApartadoPor.setVisible(false);
+        lblNombreAlum.setVisible(false);
+        pnlLogin.setVisible(false);
+
+    } else if (dto.getEstado().equalsIgnoreCase("Apartado")) {
+        lblEstado.setText("Computadora apartada");
+        lblEstado.setForeground(new java.awt.Color(204, 102, 0));
+        lblApartadoPor.setVisible(true);
+        lblNombreAlum.setVisible(true);
+        
+     
+        if (dto.getAlumno() != null) {
             lblNombreAlum.setText(dto.getAlumno().getNombreCompleto());
-
-            pnlLogin.setVisible(true);
-        } 
+        } else {
+            lblNombreAlum.setText("Alumno no identificado");
+        }
+        
+        pnlLogin.setVisible(true);
+    }
     }
 
     @SuppressWarnings("unchecked")
@@ -75,6 +91,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         JPassContrasena = new javax.swing.JPasswordField();
         btnLiberarEquipo = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -265,6 +282,13 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                 .addGap(19, 19, 19))
         );
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -278,6 +302,8 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,7 +315,9 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(lblEstado)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEstado)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -373,38 +401,28 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        try {
+            usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
 
-        int respuesta = javax.swing.JOptionPane.showConfirmDialog(this,
-                "¿Está seguro de que desea cancelar el apartado de este equipo?",
-                "Confirmar Cancelación",
-                javax.swing.JOptionPane.YES_NO_OPTION,
-                javax.swing.JOptionPane.WARNING_MESSAGE
-        );
+            javax.swing.JOptionPane.showMessageDialog(this, "El apartado ha sido cancelado con éxito.");
 
-        if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
-            try {
-                usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
+            if (this.estadoEquipoDTO != null) {
+                this.estadoEquipoDTO.setEstado("Disponible");
 
-                javax.swing.JOptionPane.showMessageDialog(this, "El apartado ha sido cancelado con éxito.");
-
-                lblEstado.setText("Computadora disponible");
-                lblEstado.setForeground(new java.awt.Color(0, 153, 51));
-
-                lblApartadoPor.setVisible(false);
-                lblNombreAlum.setVisible(false);
-                pnlLogin.setVisible(false);
-
-                JPassContrasena.setText("");
-
-            } catch (NegocioException e) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Error al cancelar apartado: " + e.getMessage(),
-                        "Error",
-                        javax.swing.JOptionPane.ERROR_MESSAGE
-                );
+                this.estadoEquipoDTO.setEstado("Disponible");
             }
+
+            configurarPantalla(this.estadoEquipoDTO);
+
+        } catch (NegocioException e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al cancelar apartado: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
         }
+
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnLiberarEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLiberarEquipoActionPerformed
@@ -429,7 +447,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
 
             lblApartadoPor.setVisible(false);
             lblNombreAlum.setVisible(false);
-            pnlLogin.setVisible(false); 
+            pnlLogin.setVisible(false);
 
         } catch (NegocioException e) {
             javax.swing.JOptionPane.showMessageDialog(this,
@@ -439,12 +457,58 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLiberarEquipoActionPerformed
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+         if (jComboBox1.getSelectedItem() == null) {
+        return;
+    }
+
+    try {
+        String seleccion = jComboBox1.getSelectedItem().toString();
+
+        EstadoEquipoDTO nuevoEstado = this.equipoNegocio.obtenerEstadoEquipo(seleccion);
+
+        if (nuevoEstado != null) {
+            this.estadoEquipoDTO = nuevoEstado;
+            
+            this.ipEquipo = seleccion; 
+
+            configurarPantalla(this.estadoEquipoDTO);
+        }
+
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Error al cambiar de equipo: " + e.getMessage(),
+                "Error de conexión",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void cargarEquiposEnComboBox() {
+        jComboBox1.removeAllItems();
+
+        try {
+
+            java.util.List<dto.ListarEquipoDTO> equipos = this.equipoNegocio.listarEquipos();
+
+            for (dto.ListarEquipoDTO equipo : equipos) {
+                jComboBox1.addItem(equipo.getDireccionIP());
+
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error al cargar la lista de equipos: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField JPassContrasena;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnLiberarEquipo;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

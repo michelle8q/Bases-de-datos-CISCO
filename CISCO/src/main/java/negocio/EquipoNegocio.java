@@ -1,6 +1,5 @@
 package negocio;
 
-
 import dto.EstadoEquipoDTO;
 import dto.ListarEquipoDTO;
 import dto.SoftwareDTO;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import persistencia.IEquipoDAO;
 import persistencia.PersistenciaException;
-
 
 /**
  *
@@ -80,7 +78,6 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
-
     @Override
     public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
         try {
@@ -90,24 +87,48 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
-    
-@Override
-public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws NegocioException {
-    try {
-        List<SoftwareEntidad> entidades = equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
-        List<SoftwareDTO> dtos = new ArrayList<>();
-        
-        for (SoftwareEntidad entidad : entidades) {
-            SoftwareDTO dto = new SoftwareDTO();
-            dto.setId(entidad.getId());
-            dto.setNombre(entidad.getNombre());
-            dtos.add(dto);
+    @Override
+    public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws NegocioException {
+        try {
+            List<SoftwareEntidad> entidades = equipoDAO.obtenerSoftwaresPorEquipo(idEquipo);
+            List<SoftwareDTO> dtos = new ArrayList<>();
+
+            for (SoftwareEntidad entidad : entidades) {
+                SoftwareDTO dto = new SoftwareDTO();
+                dto.setId(entidad.getId());
+                dto.setNombre(entidad.getNombre());
+                dtos.add(dto);
+            }
+            return dtos;
+
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error en el negocio al obtener softwares: " + e.getMessage());
         }
-        return dtos;
-        
-    } catch (PersistenciaException e) {
-        throw new NegocioException("Error en el negocio al obtener softwares: " + e.getMessage());
     }
-}
-    
+
+    @Override
+    public List<ListarEquipoDTO> listarEquipos() throws NegocioException {
+        try {
+            List<EquipoEntidad> entidades = equipoDAO.listarTodos();
+            List<ListarEquipoDTO> listaDTOs = new ArrayList<>();
+
+            for (EquipoEntidad entidad : entidades) {
+                ListarEquipoDTO dto = new ListarEquipoDTO();
+                dto.setId(entidad.getId());
+                dto.setNumeroComputadora(entidad.getNumero());
+
+                dto.setDireccionIP(entidad.getDireccionIP());
+
+                dto.setEstado(entidad.getEstado());
+
+                listaDTOs.add(dto);
+            }
+
+            return listaDTOs;
+
+        } catch (Exception e) {
+            throw new NegocioException("Error al obtener la lista de equipos: " + e.getMessage());
+        }
+    }
+
 }

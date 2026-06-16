@@ -217,19 +217,19 @@ public class EquipoDAO implements IEquipoDAO {
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
 
         String sql = "SELECT "
-                + "    e.numero AS numero_equipo, "
-                + "    l.nombre AS laboratorio, "
-                + "    IF(a.id IS NOT NULL, 'Apartado', 'Disponible') AS estado_equipo, "
-                + "    a.id AS id_alumno, "
-                + "    a.nombres, "
-                + "    a.apellidoPaterno, "
-                + "    a.apellidoMaterno "
-                + "FROM Equipos e "
-                + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
-                + "LEFT JOIN Usos u ON e.id = u.idEquipo "
-                + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
-                + "WHERE e.direccionIP = ? "
-                + "ORDER BY u.id DESC LIMIT 1;";
+        + "    e.numero AS numero_equipo, "
+        + "    l.nombre AS laboratorio, "
+        + "    e.estado AS estado_equipo, " 
+        + "    a.id AS id_alumno, "
+        + "    a.nombres, "
+        + "    a.apellidoPaterno, "
+        + "    a.apellidoMaterno "
+        + "FROM Equipos e "
+        + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
+        + "LEFT JOIN Usos u ON e.id = u.idEquipo AND e.estado = 'Apartado' " 
+        + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
+        + "WHERE e.direccionIP = ? "
+        + "ORDER BY u.id DESC LIMIT 1;";
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -298,5 +298,32 @@ public class EquipoDAO implements IEquipoDAO {
         } catch (SQLException e) {
             throw new PersistenciaException("Error al consultar los softwares del equipo: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<EquipoEntidad> listarTodos() throws PersistenciaException {
+        List<EquipoEntidad> lista = new ArrayList<>();
+
+        String sql = "SELECT id, numero, direccionIP, estado, tipo FROM Equipos";
+
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                EquipoEntidad equipo = new EquipoEntidad();
+                equipo.setId(rs.getInt("id"));
+                equipo.setNumero(rs.getInt("numero"));
+                equipo.setDireccionIP(rs.getString("direccionIP"));
+                equipo.setEstado(rs.getString("estado"));
+                equipo.setTipo(rs.getString("tipo"));
+
+                lista.add(equipo);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al listar todos los equipos: " + e.getMessage());
+            throw new PersistenciaException("Error en la base de datos al obtener todos los equipos.");
+        }
+
+        return lista;
     }
 }

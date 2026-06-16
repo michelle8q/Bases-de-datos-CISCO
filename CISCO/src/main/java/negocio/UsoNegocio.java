@@ -1,7 +1,10 @@
 package negocio;
 
 import dto.ApartadoDTO;
+import dto.EstadoEquipoDTO;
 import dto.UsoDTO;
+import entidad.AlumnoEntidad;
+import entidad.EquipoEntidad;
 import entidad.UsoEntidad;
 import java.util.ArrayList;
 import persistencia.IUsoDAO;
@@ -118,99 +121,109 @@ public class UsoNegocio implements IUsoNegocio {
             throw new NegocioException("No se pudo validar la IP en el sistema: " + e.getMessage());
         }
     }
-    
-    
+
     private void validarIP(String ip) throws NegocioException {
         if (ip == null || ip.trim().isEmpty()) {
             throw new NegocioException("La dirección IP del equipo no es válida.");
         }
     }
-    
-    
-    @Override
-    public void cancelarApartadoEquipo(String ip) throws NegocioException {
-        try {
-             validarIP(ip);
-            this.usoDAO.eliminarUsoActivoPorIP(ip);
-        } catch (PersistenciaException e) {
-            throw new NegocioException(e.getMessage());
-        }
-    }
-    
-    @Override
-    public void finalizarSesionEquipo(String ip) throws NegocioException {
-        try {
-            validarIP(ip);
-            
-            List<UsoEntidad> activos = this.usoDAO.listarUsosActivos(100, 0, ip);
-            
-            UsoEntidad usoActual = null;
-            for (UsoEntidad uso : activos) {
-                if (uso.getEquipo() != null && ip.equals(uso.getEquipo().getDireccionIP())) {
-                    usoActual = uso;
-                    break;
-                }
-            }
 
-            if (usoActual == null) {
-                List<UsoEntidad> delDia = this.usoDAO.listarApartadosDelDia(100, 0, ip);
-                for (UsoEntidad uso : delDia) {
-                    if (uso.getFechaHoraFin() == null && uso.getEquipo() != null && ip.equals(uso.getEquipo().getDireccionIP())) {
-                        usoActual = uso;
-                        break;
-                    }
-                }
-            }
+    @Override
+public void cancelarApartadoEquipo(String ip) throws NegocioException {
+    try {
+        validarIP(ip);
 
-            validarUsoExistente(usoActual, "No se encontró ningún apartado pendiente para la IP: " + ip);
-            
-            boolean exito = this.usoDAO.finalizarSesion(usoActual.getId());
-            
-            validarOperacionExitosa(exito, "No se pudo iniciar la sesión en la base de datos.");
-            
-        } catch (PersistenciaException e) {
-            throw new NegocioException("Error en la capa de persistencia: " + e.getMessage());
-        }
+        // Una sola búsqueda directa por IP
+        UsoEntidad usoActual = this.usoDAO.buscarApartadoActivoPorIP(ip);
+
+        validarUsoExistente(usoActual,
+            "No se encontró ningún apartado activo o pendiente para la IP: " + ip);
+
+        int idEquipo = usoActual.getEquipo().getId();
+        this.usoDAO.eliminarUsoActivoPorIP(ip);
+        this.equipoDAO.actualizarEstado(idEquipo, "Disponible");
+
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error en la capa de persistencia: " + e.getMessage());
+    } catch (NegocioException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new NegocioException("Error al cancelar el apartado del equipo: " + e.getMessage());
     }
-    
+}
+
+    @Override
+public void finalizarSesionEquipo(String ip) throws NegocioException {
+    try {
+        validarIP(ip);
+
+        UsoEntidad usoActual = this.usoDAO.buscarApartadoActivoPorIP(ip);
+
+        validarUsoExistente(usoActual,
+            "No se encontró ningún apartado pendiente para la IP: " + ip);
+
+        boolean exito = this.usoDAO.finalizarSesion(usoActual.getId());
+        validarOperacionExitosa(exito, "No se pudo finalizar la sesión en la base de datos.");
+
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error en la capa de persistencia: " + e.getMessage());
+    }
+}
+
     @Override
     public void iniciarSesionEquipo(String ip) throws NegocioException {
         try {
             validarIP(ip);
 
-            List<UsoEntidad> delDia = this.usoDAO.listarApartadosDelDia(100, 0, ip);
-            UsoEntidad usoActual = null;
+            UsoEntidad usoActual = this.usoDAO.buscarApartadoActivoPorIP(ip);
 
-            for (UsoEntidad uso : delDia) {
-                if (uso.getFechaHoraInicio() == null && uso.getFechaHoraFin() == null 
-                    && uso.getEquipo() != null && ip.equals(uso.getEquipo().getDireccionIP())) {
-                    usoActual = uso;
-                    break;
-                }
+            if (usoActual != null && usoActual.getFechaHoraInicio() != null) {
+                usoActual = null;
             }
-            
-            validarUsoExistente(usoActual, "No se encontró ningún apartado pendiente para la IP: " + ip);
-            
+
+            validarUsoExistente(usoActual,
+                    "No se encontró ningún apartado pendiente para la IP: " + ip);
+
             boolean exito = this.usoDAO.iniciarSesion(usoActual.getId());
-            
             validarOperacionExitosa(exito, "No se pudo iniciar la sesión en la base de datos.");
-            
+
         } catch (PersistenciaException e) {
             throw new NegocioException("Error en la capa de persistencia: " + e.getMessage());
         }
     }
-    
 
     private void validarUsoExistente(UsoEntidad uso, String mensaje) throws NegocioException {
         if (uso == null) {
             throw new NegocioException(mensaje);
         }
     }
-    
+
     private void validarOperacionExitosa(boolean exito, String mensaje) throws NegocioException {
         if (!exito) {
             throw new NegocioException(mensaje);
         }
     }
+    
+    @Override
+public void registrarApartado(int idEquipo, int idAlumno) throws NegocioException {
+    try {
+        UsoEntidad nuevo = new UsoEntidad();
+        nuevo.setFechaHoraApartado(java.time.LocalDateTime.now());
+
+        AlumnoEntidad alumno = new AlumnoEntidad();
+        alumno.setId(idAlumno);
+        nuevo.setAlumno(alumno);
+
+        EquipoEntidad equipo = new EquipoEntidad();
+        equipo.setId(idEquipo);
+        nuevo.setEquipo(equipo);
+
+        boolean exito = this.usoDAO.registrarApartado(nuevo);
+        validarOperacionExitosa(exito, "No se pudo registrar el apartado.");
+
+    } catch (PersistenciaException e) {
+        throw new NegocioException("Error al registrar apartado: " + e.getMessage());
+    }
+}
 
 }

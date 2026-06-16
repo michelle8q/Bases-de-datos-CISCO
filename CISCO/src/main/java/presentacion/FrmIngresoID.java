@@ -27,18 +27,17 @@ public class FrmIngresoID extends javax.swing.JFrame {
 
     private IAlumnoNegocio alumnoNegocio;
     private IEquipoNegocio equipoNegocio;
+    private IUsoNegocio usoNegocio;
 
     /**
      * Creates new form FrmSeleccionEquipo
      */
-    public FrmIngresoID(IAlumnoNegocio alumnoNegocio, IEquipoNegocio equipoNegocio) {
+    public FrmIngresoID(IAlumnoNegocio alumnoNegocio, IEquipoNegocio equipoNegocio, IUsoNegocio usoNegocio) {
+
         initComponents();
         this.alumnoNegocio = alumnoNegocio;
         this.equipoNegocio = equipoNegocio;
-    }
-
-    public FrmIngresoID() {
-        initComponents();
+        this.usoNegocio = usoNegocio;
     }
 
     /**
@@ -158,21 +157,33 @@ public class FrmIngresoID extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        IConexionBD conexion = new ConexionBD();
-        IUsoDAO usoDAO = new UsoDAO(conexion);
-        IIpDAO ipDAO = new IpDAO(conexion);
-        IEquipoDAO equipoDAO = new EquipoDAO(conexion);
-        IAlumnoDAO alumnoDAO = new AlumnoDAO(conexion);
-        IUsoNegocio usoNegocio = new UsoNegocio(usoDAO, ipDAO, equipoDAO, alumnoDAO);
-        FrmEquipoSeleccion pantalla = new FrmEquipoSeleccion(
-                equipoNegocio,
-                usoNegocio,
-                new AlumnoEntidad(),
-                "Cisco"
-        );
-        pantalla.setVisible(true);
-        this.setVisible(false);
-        this.dispose();
+        try {
+            String valor = txtId.getText().trim();
+            if (valor.isEmpty() || !valor.matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Ingrese un ID numérico válido.");
+                return;
+            }
+
+            int idAlumno = Integer.parseInt(valor);
+            AlumnoEntidad alumno = alumnoNegocio.buscarPorId(idAlumno);
+
+            if (alumno == null) {
+                JOptionPane.showMessageDialog(this, "No se encontró un alumno con ese ID.");
+                return;
+            }
+
+            FrmEquipoSeleccion pantalla = new FrmEquipoSeleccion(
+                    equipoNegocio,
+                    usoNegocio,
+                    alumno,
+                    "Cisco"
+            );
+            pantalla.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 

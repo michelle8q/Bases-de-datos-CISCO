@@ -23,6 +23,6 @@ public interface IEquipoNegocio {
     List<String> obtenerNombresLaboratorios() throws Exception;
 
     List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws Exception;
-    
 
+    List<dto.ListarEquipoDTO> listarEquipos() throws NegocioException;
 }

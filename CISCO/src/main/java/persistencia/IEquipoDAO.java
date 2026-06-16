@@ -28,4 +28,7 @@ public interface IEquipoDAO {
     public List<String> obtenerNombresLaboratorios() throws PersistenciaException;
 
     public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException;
+
+    public List<EquipoEntidad> listarTodos() throws PersistenciaException;
+
 }

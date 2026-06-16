@@ -26,10 +26,9 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
     private JPanel pnlFondo;
     private JPanel pnlEquipos;
     private JLabel lblTitulo;
-   
+
     private JScrollPane scrollPane;
 
-   
     public FrmEquipoSeleccion(IEquipoNegocio equipoNegocio,
             IUsoNegocio usoNegocio,
             AlumnoEntidad alumnoActual,
@@ -197,7 +196,11 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
 
     private void abrirListaSoftwares(int idEquipo, int numEquipo) {
         FrmListaSoftwaresEquipo pantalla = new FrmListaSoftwaresEquipo(
-                equipoNegocio, idEquipo, numEquipo);
+                equipoNegocio,
+                usoNegocio,
+                alumnoActual,
+                idEquipo,
+                numEquipo);
         pantalla.setVisible(true);
         this.setVisible(false);
     }
