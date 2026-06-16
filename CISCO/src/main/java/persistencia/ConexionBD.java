@@ -14,7 +14,7 @@ public class ConexionBD implements IConexionBD {
     final String BASE_DATOS = "Cisco";
     private final String CADENA_CONEXION = "jdbc:mysql://" + SERVER + "/" + BASE_DATOS;
     final String USUARIO = "root";
-    final String CONTRASEÑA = "michelle";
+    final String CONTRASEÑA = "%Mina2424%";
     
     @Override
     public Connection crearConexion() throws SQLException {

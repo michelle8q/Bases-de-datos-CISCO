@@ -269,7 +269,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUsoActionPerformed
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
-        FrmAdministracionApartados ventana = new FrmAdministracionApartados(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed

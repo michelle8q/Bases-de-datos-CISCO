@@ -34,18 +34,16 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
     /**
      * Creates new form FrmAdministracionApartados
      */
-    public FrmAdministracionApartados(IUsoNegocio conexionNegocio, IEquipoNegocio equipoNegocio) {
+    public FrmAdministracionApartados(IUsoNegocio conexionNegocio, IEquipoNegocio equipoNegocio, IBloqueoNegocio bloqueoNegocio) {
+
         initComponents();
         this.equipoNegocio = equipoNegocio;
         this.conexionNegocio = conexionNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
         cargarComboBoxLaboratorios();
 
         cargarTablaApartadosDelDia();
         iniciarActualizacionAutomatica();
-    }
-
-    public FrmAdministracionApartados() {
-        initComponents();
     }
 
     /**

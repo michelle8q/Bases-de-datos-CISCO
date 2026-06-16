@@ -32,6 +32,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
     private int paginaActual = 1;
     private final int LIMITE_POR_PAGINA = 5;
     private String laboratorioActual = "Laboratorio";
+
     /**
      * Creates new form FrmAdministracionUsos
      */
@@ -44,10 +45,6 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
         cargarTablaUsosActivos();
         cargarComboBoxLaboratorios();
         iniciarActualizacionAutomatica();
-    }
-
-    public FrmAdministracionUsos() {
-        initComponents();
     }
 
     /**
@@ -279,7 +276,8 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
 
     private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
         // TODO add your handling code here:
-        FrmAdministracionApartados ventana = new FrmAdministracionApartados(this.conexionNegocio, this.equipoNegocio);
+        FrmAdministracionApartados ventana = new FrmAdministracionApartados(this.conexionNegocio, this.equipoNegocio, this.bloqueoNegocio);
+
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnApartadosActionPerformed
