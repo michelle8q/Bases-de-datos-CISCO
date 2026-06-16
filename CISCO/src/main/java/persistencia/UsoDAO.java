@@ -16,17 +16,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase de acceso a datos (DAO) que implementa la interfaz {@link IUsoDAO}. Se
+ * encarga de gestionar todas las operaciones de persistencia en la base de
+ * datos relacionadas con la entidad {@link UsoEntidad}, incluyendo registros,
+ * consultas, y actualizaciones de los apartados y usos de equipos de cómputo.
  *
- * @author luisf
+ * * @author luisf
  */
 public class UsoDAO implements IUsoDAO {
 
     private IConexionBD conexionBaseDatos;
 
+    /**
+     * Constructor de la clase UsoDAO.
+     *
+     * * @param conexionBaseDatos Interfaz encargada de proveer la conexión a
+     * la base de datos.
+     */
     public UsoDAO(IConexionBD conexionBaseDatos) {
         this.conexionBaseDatos = conexionBaseDatos;
     }
 
+    /**
+     * Obtiene una lista paginada de los usos de equipos que se encuentran
+     * activos (es decir, aquellos cuya fecha y hora de fin son nulas). Permite
+     * filtrar por coincidencias en el nombre, apellidos o IDs del alumno y del
+     * equipo.
+     *
+     * * @param limite La cantidad máxima de registros a recuperar por página.
+     * @param offset El número de registros a omitir antes de comenzar a
+     * devolver los resultados.
+     * @param filtroBusqueda Cadena de texto utilizada para filtrar resultados.
+     * Si es nulo o vacío, no se aplica filtro.
+     * @return Una lista de objetos {@link UsoEntidad} que representan los usos
+     * activos encontrados.
+     * @throws PersistenciaException Si ocurre un error de acceso a la base de
+     * datos durante la consulta.
+     */
     @Override
     public List<UsoEntidad> listarUsosActivos(int limite, int offset, String filtroBusqueda) throws PersistenciaException {
         List<UsoEntidad> listaDeUsos = new ArrayList<>();
@@ -86,6 +112,21 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Obtiene una lista paginada de los apartados de equipos registrados para
+     * el día actual. Permite filtrar por coincidencias en el nombre, apellidos
+     * o IDs del alumno y del equipo.
+     *
+     * * @param limite La cantidad máxima de registros a recuperar por página.
+     * @param offset El número de registros a omitir antes de comenzar a
+     * devolver los resultados.
+     * @param filtroBusqueda Cadena de texto utilizada para filtrar resultados.
+     * Si es nulo o vacío, no se aplica filtro.
+     * @return Una lista de objetos {@link UsoEntidad} que representan los
+     * apartados realizados el día de hoy.
+     * @throws PersistenciaException Si ocurre un error de acceso a la base de
+     * datos durante la consulta.
+     */
     @Override
     public List<UsoEntidad> listarApartadosDelDia(int limite, int offset, String filtroBusqueda) throws PersistenciaException {
         List<UsoEntidad> listaDeUsos = new ArrayList<>();
@@ -145,6 +186,16 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Mapea los resultados obtenidos de una consulta SQL a un objeto
+     * {@link UsoEntidad}.
+     *
+     * * @param resultadosConsulta El {@link ResultSet} que contiene la fila
+     * actual de la base de datos.
+     * @return Una instancia poblada de {@link UsoEntidad}.
+     * @throws SQLException Si ocurre un error al extraer los datos del
+     * ResultSet.
+     */
     private UsoEntidad mapearEntidadUso(ResultSet resultadosConsulta) throws SQLException {
 
         AlumnoEntidad alumnoAsignado = new AlumnoEntidad();
@@ -174,6 +225,15 @@ public class UsoDAO implements IUsoDAO {
         return uso;
     }
 
+    /**
+     * Elimina el registro de uso activo correspondiente a la dirección IP de un
+     * equipo específico.
+     *
+     * * @param ip La dirección IP del equipo asociado al uso activo que se
+     * desea eliminar.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la
+     * eliminación en la base de datos.
+     */
     @Override
     public void eliminarUsoActivoPorIP(String ip) throws PersistenciaException {
         String sql = """
@@ -192,6 +252,17 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Registra un nuevo apartado de equipo en la base de datos. Las fechas de
+     * inicio y fin se inicializan como nulas, y el estado como 'Apartado'.
+     *
+     * * @param nuevoUso Objeto {@link UsoEntidad} que contiene la información
+     * del apartado (alumno, equipo y fecha de apartado).
+     * @return {@code true} si el registro fue insertado exitosamente,
+     * {@code false} en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al realizar el registro
+     * en la base de datos.
+     */
     @Override
     public boolean registrarApartado(UsoEntidad nuevoUso) throws PersistenciaException {
         String sql = """
@@ -210,6 +281,18 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Inicia la sesión de un apartado previamente registrado. Actualiza la
+     * fecha de inicio con la hora actual y cambia el estado del uso a
+     * 'Ocupado'.
+     *
+     * * @param idUso El identificador único del uso o apartado que se desea
+     * iniciar.
+     * @return {@code true} si la sesión fue iniciada exitosamente,
+     * {@code false} en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al actualizar el
+     * registro en la base de datos.
+     */
     @Override
     public boolean iniciarSesion(int idUso) throws PersistenciaException {
         String sql = """
@@ -228,6 +311,16 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Finaliza la sesión de un uso en curso. Actualiza la fecha de fin con la
+     * hora actual y cambia el estado del uso a 'Finalizado'.
+     *
+     * * @param idUso El identificador único del uso que se desea finalizar.
+     * @return {@code true} si la sesión fue finalizada exitosamente,
+     * {@code false} en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al actualizar el
+     * registro en la base de datos.
+     */
     @Override
     public boolean finalizarSesion(int idUso) throws PersistenciaException {
         String Setenciasql = """
@@ -246,6 +339,16 @@ public class UsoDAO implements IUsoDAO {
         }
     }
 
+    /**
+     * Busca y retorna el apartado de uso más reciente que se encuentra activo
+     * (sin finalizar) asociado a la dirección IP de un equipo en particular.
+     *
+     * * @param ip La dirección IP del equipo a consultar.
+     * @return Una instancia de {@link UsoEntidad} con los datos del apartado
+     * activo, o {@code null} si no se encuentra ninguno.
+     * @throws PersistenciaException Si ocurre un error al consultar la base de
+     * datos.
+     */
     @Override
     public UsoEntidad buscarApartadoActivoPorIP(String ip) throws PersistenciaException {
         String sql = """

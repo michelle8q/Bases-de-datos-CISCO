@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Clase de acceso a datos (DAO) que implementa la interfaz {@link IEquipoDAO}.
+ * Se encarga de gestionar todas las operaciones de persistencia en la base de
+ * datos relacionadas con la entidad {@link EquipoEntidad}, como la consulta de
+ * información de equipos por IP, actualización de estados, búsqueda paginada y
+ * relación con laboratorios y softwares.
  *
  * @author piña
  */
@@ -20,10 +25,25 @@ public class EquipoDAO implements IEquipoDAO {
 
     private IConexionBD conexion;
 
+    /**
+     * Constructor de la clase EquipoDAO.
+     *
+     * * @param conexion Interfaz encargada de proveer y gestionar la conexión
+     * a la base de datos.
+     */
     public EquipoDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
+    /**
+     * Obtiene el número identificador de un equipo a partir de su dirección IP.
+     *
+     * * @param IP La dirección IP del equipo que se desea consultar.
+     * @return El número del equipo como cadena de texto, o {@code null} si no
+     * se encuentra.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la consulta
+     * en la base de datos.
+     */
     @Override
     public String obtenerNumeroEquipo(String IP) throws PersistenciaException {
         String sql = "SELECT numero FROM equipos WHERE direccionIP = ?";
@@ -47,6 +67,17 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
+    /**
+     * Obtiene el nombre del laboratorio y del plantel al que pertenece un
+     * equipo, identificándolo por su dirección IP.
+     *
+     * * @param IP La dirección IP del equipo.
+     * @return Una cadena de texto concatenando el nombre del laboratorio y el
+     * plantel (ej. "Laboratorio 1 Campus Norte"), o {@code null} si no se
+     * encuentra.
+     * @throws PersistenciaException Si ocurre un error de acceso a la base de
+     * datos.
+     */
     @Override
     public String obtenerLaboratorio(String IP) throws PersistenciaException {
         String sql = """
@@ -80,6 +111,16 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
+    /**
+     * Obtiene el identificador (ID) del alumno que tiene apartado un equipo
+     * específico, siempre y cuando el estado del equipo sea 'Apartado' y el
+     * apartado se haya realizado en el último minuto.
+     *
+     * * @param IP La dirección IP del equipo consultado.
+     * @return El ID del alumno si cumple con las condiciones, o {@code -1} en
+     * caso contrario.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la consulta.
+     */
     @Override
     public int obtenerIDAlumnoApartado(String IP) throws PersistenciaException {
         String sql = """
@@ -113,6 +154,19 @@ public class EquipoDAO implements IEquipoDAO {
 
     }
 
+    /**
+     * Obtiene una lista paginada de equipos pertenecientes a un laboratorio
+     * específico. Permite filtrar los resultados mediante coincidencias en la
+     * dirección IP o el número del equipo.
+     *
+     * * @param nombreLaboratorio El nombre exacto del laboratorio a consultar.
+     * @param filtro Cadena de texto para buscar coincidencias (IP o número).
+     * @param limite Cantidad máxima de registros a recuperar por página.
+     * @param pagina Número de página que se desea visualizar.
+     * @return Una lista de {@link EquipoEntidad} con los resultados de la
+     * búsqueda.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la consulta.
+     */
     @Override
     public List<EquipoEntidad> buscarEquipos(String nombreLaboratorio, String filtro, int limite, int pagina) throws PersistenciaException {
         List<EquipoEntidad> lista = new ArrayList<>();
@@ -154,6 +208,17 @@ public class EquipoDAO implements IEquipoDAO {
         return lista;
     }
 
+    /**
+     * Cuenta el número total de equipos que coinciden con un laboratorio y un
+     * filtro específicos. Este método es utilizado principalmente para calcular
+     * el total de páginas necesarias en la paginación.
+     *
+     * * @param nombreLaboratorio El nombre exacto del laboratorio.
+     * @param filtro Cadena de texto para filtrar por IP o número de equipo.
+     * @return El número total de equipos que cumplen con los criterios.
+     * @throws PersistenciaException Si ocurre un error al realizar el conteo en
+     * la base de datos.
+     */
     @Override
     public int contarEquipos(String nombreLaboratorio, String filtro) throws PersistenciaException {
         String sql = """
@@ -182,6 +247,15 @@ public class EquipoDAO implements IEquipoDAO {
         return 0;
     }
 
+    /**
+     * Actualiza el estado (ej. Disponible, Apartado, En Uso, Mantenimiento) de
+     * un equipo específico.
+     *
+     * * @param idEquipo El identificador único del equipo a actualizar.
+     * @param nuevoEstado El nuevo estado que se le asignará al equipo.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la
+     * actualización.
+     */
     @Override
     public void actualizarEstado(int idEquipo, String nuevoEstado) throws PersistenciaException {
         String sql = "UPDATE Equipos SET estado = ? WHERE id = ?";
@@ -195,6 +269,15 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
+    /**
+     * Recupera una lista con los nombres de todos los laboratorios registrados
+     * en la base de datos, ordenados alfabéticamente.
+     *
+     * * @return Una lista de cadenas de texto con los nombres de los
+     * laboratorios.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de
+     * datos.
+     */
     @Override
     public List<String> obtenerNombresLaboratorios() throws PersistenciaException {
         List<String> laboratorios = new ArrayList<>();
@@ -213,23 +296,34 @@ public class EquipoDAO implements IEquipoDAO {
         return laboratorios;
     }
 
+    /**
+     * Obtiene un reporte detallado del estado actual de un equipo buscando por
+     * su dirección IP. El reporte incluye información del equipo, el
+     * laboratorio al que pertenece y, si se encuentra en uso o apartado, los
+     * datos del alumno responsable.
+     *
+     * * @param IP La dirección IP del equipo a consultar.
+     * @return Un objeto {@link EstadoEquipoDTO} con la información del estado,
+     * o {@code null} si el equipo no existe.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la consulta.
+     */
     @Override
     public EstadoEquipoDTO obtenerEstado(String IP) throws PersistenciaException {
 
         String sql = "SELECT "
-        + "    e.numero AS numero_equipo, "
-        + "    l.nombre AS laboratorio, "
-        + "    e.estado AS estado_equipo, " 
-        + "    a.id AS id_alumno, "
-        + "    a.nombres, "
-        + "    a.apellidoPaterno, "
-        + "    a.apellidoMaterno "
-        + "FROM Equipos e "
-        + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
-        + "LEFT JOIN Usos u ON e.id = u.idEquipo AND e.estado = 'Apartado' " 
-        + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
-        + "WHERE e.direccionIP = ? "
-        + "ORDER BY u.id DESC LIMIT 1;";
+                + "    e.numero AS numero_equipo, "
+                + "    l.nombre AS laboratorio, "
+                + "    e.estado AS estado_equipo, "
+                + "    a.id AS id_alumno, "
+                + "    a.nombres, "
+                + "    a.apellidoPaterno, "
+                + "    a.apellidoMaterno "
+                + "FROM Equipos e "
+                + "INNER JOIN Laboratorios l ON e.idLaboratorio = l.id "
+                + "LEFT JOIN Usos u ON e.id = u.idEquipo AND e.estado = 'Apartado' "
+                + "LEFT JOIN Alumnos a ON u.idAlumno = a.id "
+                + "WHERE e.direccionIP = ? "
+                + "ORDER BY u.id DESC LIMIT 1;";
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -271,6 +365,16 @@ public class EquipoDAO implements IEquipoDAO {
         return null;
     }
 
+    /**
+     * Recupera la lista de programas de software que se encuentran instalados
+     * en un equipo en particular.
+     *
+     * * @param idEquipo El identificador único del equipo.
+     * @return Una lista de entidades {@link SoftwareEntidad} que representan
+     * los programas instalados.
+     * @throws PersistenciaException Si ocurre un error al realizar la consulta.
+     */
+
     @Override
     public List<SoftwareEntidad> obtenerSoftwaresPorEquipo(int idEquipo) throws PersistenciaException {
         List<SoftwareEntidad> listaSoftwares = new ArrayList<>();
@@ -300,6 +404,15 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
+    /**
+     * Obtiene una lista completa con todos los equipos registrados en la base
+     * de datos, sin aplicar ningún tipo de filtro o paginación.
+     *
+     * * @return Una lista que contiene todos los objetos
+     * {@link EquipoEntidad}.
+     * @throws PersistenciaException Si ocurre un error al obtener los registros
+     * de la base de datos.
+     */
     @Override
     public List<EquipoEntidad> listarTodos() throws PersistenciaException {
         List<EquipoEntidad> lista = new ArrayList<>();

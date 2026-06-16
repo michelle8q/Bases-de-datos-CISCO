@@ -29,11 +29,35 @@ import presentacion.FrmEquipoDisponible;
 import presentacion.FrmIngresoID;
 
 /**
+ * Clase principal y punto de entrada (Entry Point) del sistema de control de
+ * laboratorios CISCO. Se encarga de coordinar el arranque de la aplicación
+ * mediante el levantamiento y enlace de la arquitectura multicapa (Persistencia
+ * y Capa de Negocio). * Además, implementa un mecanismo de enrutamiento
+ * dinámico por red: detecta la dirección IP física de la máquina local y, en
+ * función de su rol asignado en la base de datos, inicializa la interfaz
+ * gráfica (GUI) correspondiente para el Administrador, Alumnos o el Centro de
+ * Apartados.
  *
- * @author cinca
+ * * @author cinca piña luisf
  */
 public class CISCO {
 
+    /**
+     * Método de arranque del sistema (Main Thread). Ejecuta secuencialmente las
+     * siguientes acciones de inicialización:
+     *
+     * Instancia el manejador de conexiones a la base de datos. Construye las
+     * unidades de persistencia (DAOs) inyectando la conexión. Inicializa la
+     * lógica de negocio aplicando inversión de dependencias. Recupera de forma
+     * nativa la IP privada asignada a la interfaz de red actual. Determina y
+     * levanta de forma exclusiva el formulario de presentación adecuado.
+     *
+     * En caso de accesos inválidos o fallos de red críticos, interrumpe de
+     * forma segura la ejecución.
+     *
+     * * @param args Argumentos opcionales recibidos por la línea de comandos
+     * (no utilizados).
+     */
     public static void main(String[] args) {
 
         try {

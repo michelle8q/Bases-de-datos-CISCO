@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * Clase de acceso a datos (DAO) que implementa la interfaz {@link IAlumnoDAO}.
+ * Se encarga de gestionar todas las operaciones de persistencia en la base de
+ * datos relacionadas con la entidad {@link AlumnoEntidad}, como la búsqueda de
+ * estudiantes inscritos y la validación de sus credenciales.
  *
  * @author cinca
  */
@@ -15,10 +19,31 @@ public class AlumnoDAO implements IAlumnoDAO {
 
     private IConexionBD conexion;
 
+    /**
+     * Constructor de la clase AlumnoDAO.
+     *
+     * * @param conexion Interfaz encargada de proveer y gestionar la conexión
+     * a la base de datos.
+     */
     public AlumnoDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
+    /**
+     * Busca y recupera la información de un alumno específico a partir de su
+     * identificador único (ID). La consulta está restringida a recuperar
+     * únicamente alumnos que se encuentren activos/inscritos
+     * ({@code esInscrito = true}) y realiza un cruce (JOIN) para obtener los
+     * datos de la carrera asociada al alumno.
+     *
+     * * @param id El identificador único del alumno que se desea buscar en la
+     * base de datos.
+     * @return Una instancia poblada de {@link AlumnoEntidad} que incluye los
+     * datos del alumno y su carrera, o {@code null} si el alumno no existe o no
+     * se encuentra inscrito.
+     * @throws PersistenciaException Si ocurre un error de conexión o acceso a
+     * la base de datos durante la consulta.
+     */
     @Override
     public AlumnoEntidad buscarAlumnoPorId(int id) throws PersistenciaException {
         try (Connection conexion = this.conexion.crearConexion()) {
@@ -61,6 +86,20 @@ public class AlumnoDAO implements IAlumnoDAO {
 
     }
 
+    /**
+     * Valida si la contraseña proporcionada coincide con la almacenada en la
+     * base de datos para un alumno en particular.
+     *
+     * * @param idAlumno El identificador único del alumno cuyas credenciales
+     * se desean verificar.
+     * @param contrasena La contraseña en texto plano que se va a comparar con
+     * el registro de la base de datos.
+     * @return {@code true} si la contraseña coincide con los registros del
+     * alumno correspondiente, {@code false} en caso contrario o si el alumno no
+     * existe.
+     * @throws PersistenciaException Si ocurre un error al ejecutar la
+     * validación en la base de datos.
+     */
     @Override
     public boolean validarContrasena(int idAlumno, String contrasena) throws PersistenciaException {
         String sql = "SELECT COUNT(*) FROM Alumnos WHERE id = ? AND contrasena = ?;";

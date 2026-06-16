@@ -405,10 +405,7 @@ public class FrmAdministracionUsos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar los laboratorios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblTitulo;
     private javax.swing.JLabel LblTituloTabla;

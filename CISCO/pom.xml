@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>itson.org.cisco.CISCO</exec.mainClass>
+        <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
     <dependencies>
         <dependency>

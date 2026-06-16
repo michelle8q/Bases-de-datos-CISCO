@@ -11,6 +11,12 @@ import persistencia.IEquipoDAO;
 import persistencia.PersistenciaException;
 
 /**
+ * Clase que implementa la interfaz {@link IEquipoNegocio}. Se encarga de la
+ * lógica de negocio relacionada con la gestión, consulta y modificación del
+ * estado de los equipos de cómputo en los laboratorios. Actúa como
+ * intermediario entre la capa de presentación y la capa de acceso a datos
+ * (DAO), transformando las entidades del sistema en objetos de transferencia de
+ * datos (DTO).
  *
  * @author piña luis
  */
@@ -18,11 +24,34 @@ public class EquipoNegocio implements IEquipoNegocio {
 
     private final IEquipoDAO equipoDAO;
 
-    // Inyección de dependencias: le pasamos el DAO por el constructor
+    /**
+     * Constructor de la clase EquipoNegocio. Aplica el patrón de inyección de
+     * dependencias para vincular la capa de acceso a datos.
+     *
+     * * @param equipoDAO Interfaz encargada de proveer los métodos de
+     * persistencia para los equipos.
+     */
     public EquipoNegocio(IEquipoDAO equipoDAO) {
         this.equipoDAO = equipoDAO;
     }
 
+    /**
+     * Busca y recupera una lista paginada de equipos, filtrada por el nombre
+     * del laboratorio y un criterio de búsqueda específico. Convierte las
+     * entidades resultantes a DTOs para la vista.
+     *
+     * * @param nombreLaboratorio El nombre del laboratorio al que pertenecen
+     * los equipos.
+     * @param filtro Cadena de texto para filtrar los equipos (por ejemplo, por
+     * número de computadora o IP).
+     * @param limite La cantidad máxima de equipos a devolver en la página
+     * actual.
+     * @param pagina El número de la página que se desea consultar (offset).
+     * @return Una lista de objetos {@link ListarEquipoDTO} que coinciden con
+     * los criterios de búsqueda.
+     * @throws Exception Si ocurre un error al consultar los datos en la base de
+     * datos o al procesar la lista.
+     */
     @Override
     public List<ListarEquipoDTO> buscarEquiposPaginados(String nombreLaboratorio, String filtro, int limite, int pagina) throws Exception {
         try {
@@ -47,6 +76,19 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
+    /**
+     * Calcula el número total de páginas necesarias para mostrar todos los
+     * equipos resultantes de una búsqueda, basándose en un límite de elementos
+     * por página.
+     *
+     * * @param nombreLaboratorio El nombre del laboratorio a consultar.
+     * @param filtro Cadena de texto utilizada como criterio de búsqueda.
+     * @param limite La cantidad máxima de elementos que se mostrarán por
+     * página.
+     * @return El número entero con el total de páginas calculadas.
+     * @throws Exception Si ocurre un error al realizar el conteo en la capa de
+     * persistencia.
+     */
     @Override
     public int obtenerTotalPaginas(String nombreLaboratorio, String filtro, int limite) throws Exception {
         try {
@@ -59,6 +101,16 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
+    /**
+     * Modifica el estado actual de un equipo específico en el sistema.
+     *
+     * * @param idEquipo El identificador único del equipo cuyo estado será
+     * modificado.
+     * @param nuevoEstado El nuevo estado que se le asignará al equipo (ej.
+     * "Disponible", "Mantenimiento").
+     * @throws Exception Si ocurre un error al intentar actualizar el estado en
+     * la base de datos.
+     */
     @Override
     public void cambiarEstadoEquipo(int idEquipo, String nuevoEstado) throws Exception {
         try {
@@ -78,6 +130,15 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
+    /**
+     * Obtiene una lista con los nombres de todos los laboratorios registrados
+     * en el sistema.
+     *
+     * * @return Una lista de cadenas de texto ({@code List<String>}) con los
+     * nombres de los laboratorios.
+     * @throws NegocioException Si ocurre un error al cargar la información desde la
+     * capa de persistencia.
+     */
     @Override
     public EstadoEquipoDTO obtenerEstadoEquipo(String ip) throws NegocioException {
         try {
@@ -87,6 +148,16 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
+    /**
+     * Consulta y devuelve el estado actual de un equipo basándose en su
+     * dirección IP.
+     *
+     * * @param ip La dirección IP de red asignada al equipo.
+     * @return Un objeto {@link EstadoEquipoDTO} con la información del estado
+     * actual del equipo.
+     * @throws NegocioException Si ocurre un error en la capa de persistencia al
+     * realizar la búsqueda.
+     */
     @Override
     public List<SoftwareDTO> obtenerSoftwaresPorEquipo(int idEquipo) throws NegocioException {
         try {
@@ -106,6 +177,17 @@ public class EquipoNegocio implements IEquipoNegocio {
         }
     }
 
+    /**
+     * Recupera la lista de programas de software que se encuentran instalados
+     * en un equipo específico. Convierte las entidades de software recuperadas
+     * en objetos DTO.
+     *
+     * * @param idEquipo El identificador único del equipo a consultar.
+     * @return Una lista de objetos {@link SoftwareDTO} representando los
+     * programas instalados.
+     * @throws NegocioException Si ocurre un error al consultar la capa de
+     * persistencia.
+     */
     @Override
     public List<ListarEquipoDTO> listarEquipos() throws NegocioException {
         try {

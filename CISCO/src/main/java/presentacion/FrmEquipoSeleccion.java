@@ -9,6 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Ventana gráfica principal encargada de mostrar el mapa visual de equipos
+ * (computadoras) dentro de un laboratorio específico. Permite al alumno
+ * visualizar qué equipos están disponibles u ocupados y seleccionar uno para
+ * visualizar su software o proceder a reservarlo/usarlo.
+ *
+ * * @author luisf
+ */
 public class FrmEquipoSeleccion extends javax.swing.JFrame {
 
     private IEquipoNegocio equipoNegocio;
@@ -29,6 +37,18 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
 
     private JScrollPane scrollPane;
 
+    /**
+     * Constructor de la ventana de selección de equipos.
+     *
+     * * @param equipoNegocio Dependencia para consultar la información y
+     * estado de los equipos.
+     * @param usoNegocio Dependencia para gestionar las reglas de uso o
+     * apartados de los equipos.
+     * @param alumnoActual La entidad del alumno que está utilizando el sistema
+     * actualmente.
+     * @param nombreLaboratorio El nombre del laboratorio a consultar (ej.
+     * "Laboratorio A").
+     */
     public FrmEquipoSeleccion(IEquipoNegocio equipoNegocio,
             IUsoNegocio usoNegocio,
             AlumnoEntidad alumnoActual,
@@ -41,6 +61,11 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
         cargarEquipos();
     }
 
+    /**
+     * Inicializa los componentes base de la ventana, como paneles, etiquetas de
+     * título y el contenedor de desplazamiento (ScrollPane) para el grid de
+     * equipos.
+     */
     private void initComponents() {
         setTitle("Selección de Equipo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,7 +98,9 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
     }
 
     /**
-     * Consulta y carga dinámicamente los equipos reales desde la base de datos
+     * Consulta la capa de negocio para obtener dinámicamente la lista de
+     * equipos reales pertenecientes al laboratorio seleccionado, y los
+     * renderiza en la interfaz.
      */
     private void cargarEquipos() {
         pnlEquipos.removeAll();
@@ -111,6 +138,16 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
         pnlEquipos.repaint();
     }
 
+    /**
+     * Crea y personaliza un botón que dibuja la forma gráfica de un monitor de
+     * computadora, asignando un color verde o rojo dependiendo de su
+     * disponibilidad.
+     *
+     * * @param numero El número identificador del equipo.
+     * @param disponible Booleano que indica si el equipo está libre para ser
+     * seleccionado.
+     * @return El {@link JButton} dibujado de forma personalizada.
+     */
     private JButton crearBotonEquipo(int numero, boolean disponible) {
         JButton btn = new JButton(String.valueOf(numero)) {
             @Override
@@ -185,6 +222,13 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
         return btn;
     }
 
+    /**
+     * Calcula y configura dinámicamente el layout del grid según la cantidad de
+     * equipos cargados.
+     *
+     * * @param total La cantidad total de equipos recuperados de la base de
+     * datos.
+     */
     private void configurarGrid(int total) {
         int columnas = 4;
         int filas = (int) Math.ceil((double) total / columnas);
@@ -194,6 +238,13 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)));
     }
 
+    /**
+     * Abre el formulario secundario que lista el software instalado en el
+     * equipo seleccionado, ocultando la pantalla actual.
+     *
+     * * @param idEquipo El ID único en base de datos del equipo seleccionado.
+     * @param numEquipo El número físico o de etiqueta del equipo.
+     */
     private void abrirListaSoftwares(int idEquipo, int numEquipo) {
         FrmListaSoftwaresEquipo pantalla = new FrmListaSoftwaresEquipo(
                 equipoNegocio,
@@ -205,10 +256,17 @@ public class FrmEquipoSeleccion extends javax.swing.JFrame {
         this.setVisible(false);
     }
 
+    /**
+     * Cierra la ventana actual y retorna a la vista anterior (si corresponde).
+     */
     private void btnAtrasActionPerformed() {
         this.dispose();
     }
 
+    /**
+     * Muestra una alerta informativa indicando al usuario la acción requerida
+     * en caso de intentar avanzar sin haber seleccionado un equipo válido.
+     */
     private void btnSiguienteActionPerformed() {
         JOptionPane.showMessageDialog(this,
                 "Seleccione un equipo verde para continuar.",

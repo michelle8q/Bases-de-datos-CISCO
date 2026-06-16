@@ -266,10 +266,7 @@ public class FrmListaSoftwaresEquipo extends javax.swing.JFrame {
         sb.append("</html>");
         LblLista.setText(sb.toString());
     }
-    /**
-     * @param args the command line arguments
-     */
-
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBuscar1;
