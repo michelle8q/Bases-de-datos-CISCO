@@ -17,8 +17,20 @@ public class UsoEntidad {
     private LocalDateTime fechaHoraFin;
     private AlumnoEntidad alumno; 
     private EquipoEntidad equipo;
+    private String estado;
 
     public UsoEntidad() {
+    }
+
+    public UsoEntidad(int id, LocalDateTime fechaHoraApartado, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, AlumnoEntidad alumno, EquipoEntidad equipo,
+                      String estado) {
+        this.id = id;
+        this.fechaHoraApartado = fechaHoraApartado;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
+        this.alumno = alumno;
+        this.equipo = equipo;
+        this.estado = estado;
     }
 
     public UsoEntidad(int id, LocalDateTime fechaHoraApartado, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, AlumnoEntidad alumno, EquipoEntidad equipo) {
@@ -29,6 +41,8 @@ public class UsoEntidad {
         this.alumno = alumno;
         this.equipo = equipo;
     }
+    
+    
 
     public int getId() {
         return id;
@@ -76,6 +90,14 @@ public class UsoEntidad {
 
     public void setEquipo(EquipoEntidad equipo) {
         this.equipo = equipo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
     
     

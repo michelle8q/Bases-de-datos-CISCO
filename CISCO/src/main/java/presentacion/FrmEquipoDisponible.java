@@ -48,7 +48,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
             lblNombreAlum.setText(dto.getAlumno().getNombreCompleto());
 
             pnlLogin.setVisible(true);
-        }
+        } 
     }
 
     @SuppressWarnings("unchecked")
@@ -344,6 +344,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
             boolean esValida = alumnoNegocio.verificarCredencialesAlumno(idAlumno, contrasena);
 
             if (esValida) {
+                this.usoNegocio.iniciarSesionEquipo(this.ipEquipo);
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "¡Contraseña correcta! Bienvenido al sistema.",
                         "Acceso Concedido",
@@ -416,7 +417,7 @@ public class FrmEquipoDisponible extends javax.swing.JFrame {
         }
 
         try {
-            this.usoNegocio.cancelarApartadoEquipo(this.ipEquipo);
+            this.usoNegocio.finalizarSesionEquipo(this.ipEquipo);
 
             javax.swing.JOptionPane.showMessageDialog(this,
                     "El equipo se ha liberado correctamente y vuelve a estar disponible.",

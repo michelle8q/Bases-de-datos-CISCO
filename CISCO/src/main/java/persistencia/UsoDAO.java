@@ -36,7 +36,7 @@ public class UsoDAO implements IUsoDAO {
             boolean hayFiltro = filtroBusqueda != null && !filtroBusqueda.trim().isEmpty();
 
             StringBuilder sentenciaSQL = new StringBuilder("""
-                           SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
+                           SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, Usos.estado,
                                   Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
                                   Equipos.id AS idDelEquipo, Equipos.direccionIP 
                            FROM Usos 
@@ -94,7 +94,7 @@ public class UsoDAO implements IUsoDAO {
             boolean hayFiltro = filtroBusqueda != null && !filtroBusqueda.trim().isEmpty();
 
             StringBuilder sentenciaSQL = new StringBuilder("""
-                               SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, 
+                               SELECT Usos.id, Usos.fechaHoraApartado, Usos.fechaHoraInicio, Usos.fechaHoraFin, Usos.estado,
                                       Alumnos.id AS idDelAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno, 
                                       Equipos.id AS idDelEquipo, Equipos.direccionIP 
                                FROM Usos 
@@ -155,12 +155,13 @@ public class UsoDAO implements IUsoDAO {
 
         EquipoEntidad equipoAsignado = new EquipoEntidad();
         equipoAsignado.setId(resultadosConsulta.getInt("idDelEquipo"));
+        equipoAsignado.setDireccionIP(resultadosConsulta.getString("direccionIP"));
 
         Timestamp tiempoDeApartado = resultadosConsulta.getTimestamp("fechaHoraApartado");
         Timestamp tiempoDeInicio = resultadosConsulta.getTimestamp("fechaHoraInicio");
         Timestamp tiempoDeFin = resultadosConsulta.getTimestamp("fechaHoraFin");
 
-        return new UsoEntidad(
+        UsoEntidad uso = new UsoEntidad(
                 resultadosConsulta.getInt("id"),
                 (tiempoDeApartado != null) ? tiempoDeApartado.toLocalDateTime() : null,
                 (tiempoDeInicio != null) ? tiempoDeInicio.toLocalDateTime() : null,
@@ -168,6 +169,9 @@ public class UsoDAO implements IUsoDAO {
                 alumnoAsignado,
                 equipoAsignado
         );
+        
+        uso.setEstado(resultadosConsulta.getString("estado"));
+        return uso;
     }
 
     @Override
@@ -189,4 +193,64 @@ public class UsoDAO implements IUsoDAO {
             throw new PersistenciaException("Error al eliminar el apartado en la base de datos: " + e.getMessage());
         }
     }
+    
+     @Override
+    public boolean registrarApartado(UsoEntidad nuevoUso) throws PersistenciaException {
+        String sql = """
+                     INSERT INTO Usos (fechaHoraApartado, fechaHoraInicio, fechaHoraFin, estado, idAlumno, idEquipo) 
+                     VALUES (?, NULL, NULL, 'Apartado', ?, ?)
+                     """;
+        try (Connection con = this.conexionBaseDatos.crearConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(nuevoUso.getFechaHoraApartado()));
+            ps.setInt(2, nuevoUso.getAlumno().getId());
+            ps.setInt(3, nuevoUso.getEquipo().getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al registrar apartado: " + e.getMessage());
+        }
+    }
+    
+     @Override
+    public boolean iniciarSesion(int idUso) throws PersistenciaException {
+        String sql = """
+                     UPDATE Usos 
+                     SET fechaHoraInicio = ?, estado = 'Ocupado' 
+                     WHERE id = ?
+                     """;
+        try (Connection con = this.conexionBaseDatos.crearConexion(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(java.time.LocalDateTime.now()));
+            ps.setInt(2, idUso);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al iniciar sesión: " + e.getMessage());
+        }
+    }
+    
+     @Override
+    public boolean finalizarSesion(int idUso) throws PersistenciaException {
+        String Setenciasql = """
+                     UPDATE Usos 
+                     SET fechaHoraFin = ?, estado = 'Disponible' 
+                     WHERE id = ?
+                     """;
+        try (Connection con = this.conexionBaseDatos.crearConexion(); 
+                
+            
+             PreparedStatement ps = con.prepareStatement(Setenciasql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(java.time.LocalDateTime.now()));
+            ps.setInt(2, idUso);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al finalizar sesión: " + e.getMessage());
+        }
+    }
+    
 }
