@@ -113,6 +113,7 @@ public class FrmAdministracionApartados extends javax.swing.JFrame {
                 "Numero Computadora", "ID alumno", "Nombre alumno", "Hora Inicio", "Hora fin", "Estado"
             }
         ));
+        TlbApartados.setRowHeight(40);
         jScrollPane1.setViewportView(TlbApartados);
 
         btnBuscar.setText("Buscar");

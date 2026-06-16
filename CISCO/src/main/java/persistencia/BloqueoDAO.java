@@ -115,13 +115,16 @@ public class BloqueoDAO implements IBloqueoDAO {
 
         try (Connection conexion = this.conexion.crearConexion()) {
                 String sentenciaSQL = """
-                                      UPDATE bloqueos SET fechaHoraFin = NOW() WHERE id = ? AND fechaHoraFin IS NULL
+                                      UPDATE bloqueos SET fechaHoraFin = NOW() WHERE id = ? 
                                      """;
 
         PreparedStatement statement = conexion.prepareStatement(sentenciaSQL);
         statement.setInt(1, id);
 
-        statement.executeUpdate();
+        int filas = statement.executeUpdate();
+        
+        System.out.println("ID recibido: " + id);
+        System.out.println("Filas afectadas: " + filas);
         
         return bloqueoEliminado;
         
@@ -142,8 +145,13 @@ public class BloqueoDAO implements IBloqueoDAO {
                                SELECT Bloqueos.id, Bloqueos.fechaHoraInicio, Bloqueos.fechaHoraFin, Bloqueos.motivo,
                                       Alumnos.id AS idAlumno, Alumnos.nombres, Alumnos.apellidoPaterno, Alumnos.apellidoMaterno   
                                FROM Bloqueos 
-                               INNER JOIN Alumnos ON Bloqueos.idAlumno = Alumnos.id WHERE Bloqueos.motivo LIKE ?
-                                  OR Alumnos.nombres LIKE ? OR Alumnos.apellidoPaterno LIKE ? OR Alumnos.apellidoMaterno LIKE ?
+                               INNER JOIN Alumnos ON Bloqueos.idAlumno = Alumnos.id WHERE Bloqueos.fechaHoraFin > NOW() 
+                                  AND (
+                                    Bloqueos.motivo LIKE ?
+                                    OR Alumnos.nombres LIKE ? 
+                                    OR Alumnos.apellidoPaterno LIKE ? 
+                                    OR Alumnos.apellidoMaterno LIKE ?
+                                  )
                                LIMIT ? OFFSET ?
                               """;
             
@@ -200,7 +208,7 @@ public class BloqueoDAO implements IBloqueoDAO {
     public boolean BloqueoExistenteAlumno(int idAlumno) throws PersistenciaException {
         try (Connection conexion = this.conexion.crearConexion()) {
                 String sentenciaSQL = """
-                                       SELECT COUNT(*) FROM bloqueos WHERE idAlumno = ? AND fechaHoraFin IS NULL;
+                                       SELECT COUNT(*) FROM bloqueos WHERE idAlumno = ? Bloqueos.fechaHoraFin > NOW();
                                       """;
 
         PreparedStatement statement = conexion.prepareStatement(sentenciaSQL);

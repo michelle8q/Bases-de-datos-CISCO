@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +17,8 @@ import negocio.IBloqueoNegocio;
 import negocio.IEquipoNegocio;
 import negocio.IUsoNegocio;
 import negocio.NegocioException;
+import utilerias.ButtonEditor;
+import utilerias.ButtonRenderer;
 
 /**
  *
@@ -29,6 +32,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
     private int paginaActual = 1;
     private Timer temporizadorActualizacion;
     private final int LIMITE_POR_PAGINA = 5;
+    private List<BloqueoEntidad> listaActual;
 
     /**
      * Creates new form FrmAdministracionBloqueados
@@ -41,6 +45,7 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
 
         cargarTablaBloqueosActivos();
         iniciarActualizacionAutomatica();
+        configurarTabla();
     }
 
     /**
@@ -331,15 +336,15 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
             validarFiltroBusqueda(filtro);
             int pagina = Math.max(0, paginaActual - 1);
 
-            List<BloqueoEntidad> listaBloqueos = bloqueoNegocio.listarBloqueos(filtro, LIMITE_POR_PAGINA, pagina);
+            listaActual = bloqueoNegocio.listarBloqueos(filtro, LIMITE_POR_PAGINA, pagina);
 
-            System.out.println("TAMAÑO LISTA: " + listaBloqueos.size());
+            System.out.println("TAMAÑO LISTA: " + listaActual.size());
             DefaultTableModel modeloTabla = (DefaultTableModel) TlbBloqueados.getModel();
             modeloTabla.setRowCount(0);
 
             DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-            for (BloqueoEntidad bloqueo : listaBloqueos) {
+            for (BloqueoEntidad bloqueo : listaActual) {
 
                 String nombreCompleto = bloqueo.getAlumno().getNombres() + " "
                         + bloqueo.getAlumno().getApellidoPaterno() + " "
@@ -349,13 +354,15 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
                 String horaDeInicio = (bloqueo.getFechaHoraInicio() != null)
                         ? bloqueo.getFechaHoraInicio().format(formatoFechaHora)
                         : "Sin iniciar";
-
+                
+                String textoBoton = "Desbloquear";
+                
                 Object[] filaNueva = {
                     bloqueo.getIdAlumno(),
                     nombreCompleto,
                     horaDeInicio,
                     bloqueo.getMotivo(),
-                    "Desbloquear"
+                    textoBoton
                 };
 
                 modeloTabla.addRow(filaNueva);
@@ -366,6 +373,39 @@ public class FrmAdministracionBloqueados extends javax.swing.JFrame {
 
         } catch (PresentacionException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+    
+    private void configurarTabla() {
+        TlbBloqueados.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+
+        TlbBloqueados.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), () -> {
+            accionBotonTabla();
+        }));
+    }
+
+    
+     private void accionBotonTabla() {
+        Integer fila = (Integer) TlbBloqueados.getClientProperty("filaSeleccionada");
+        cargarTablaBloqueosActivos();
+
+        if (fila != null && fila >= 0 && fila < listaActual.size()) {
+
+            BloqueoEntidad bloqueoSeleccionado = listaActual.get(fila);
+            int idBloqueo = bloqueoSeleccionado.getId();
+
+
+            try {
+                bloqueoNegocio.desbloquear(bloqueoSeleccionado.getId());
+
+                JOptionPane.showMessageDialog(this, "Alumno desbloqueado ", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarTablaBloqueosActivos();
+                
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            cargarTablaBloqueosActivos();
+
         }
     }
 

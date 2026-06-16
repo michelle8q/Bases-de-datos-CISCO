@@ -118,6 +118,7 @@ public class FrmAdministracionListaComputadoras extends javax.swing.JFrame {
                 "Numero Computadora", "Direccion IP", "Estado", "Acciones de apartado"
             }
         ));
+        TlbBloqueados.setRowHeight(40);
         jScrollPane1.setViewportView(TlbBloqueados);
 
         btnBuscar.setText("Buscar");
